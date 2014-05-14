@@ -1,6 +1,13 @@
 AUI.add(
 	'liferay-form',
 	function(A) {
+		
+		/**
+ 		 * the Liferay Form module.
+ 		 *
+ 		 * @module liferay-form
+ 		 */
+
 		var DEFAULTS_FORM_VALIDATOR = A.config.FormValidator;
 
 		var defaultAcceptFiles = DEFAULTS_FORM_VALIDATOR.RULES.acceptFiles;
@@ -51,13 +58,63 @@ AUI.add(
 			},
 			true
 		);
-
+                
+                /**
+ 		 * A base class for `A.Form`
+		 *
+		 * @class A.Form
+		 * @extends Base
+		 * @param {Object} config Object literal specifying 
+		 * widget configuration properties.
+		 * @constructor
+		 */
 		var Form = A.Component.create(
 			{
+
+				/**
+ 		 		 * static property used to define the default attribute
+		 		 * configuration for the `A.Form`. 
+		 		 *
+		 		 * @property ATTRS
+		 		 * @type Object
+				 * @static
+		 		 */
 				ATTRS: {
+
+					/**
+					 * Holds the id for the form.
+					 *
+					 * @attribute id
+					 * @default {}
+					 * @type Object
+					 */
 					id: {},
+
+					/**
+					 * Holds name of form.
+					 *
+					 * @attribute namespace
+					 * @default {}
+					 * @type Object
+					 */
 					namespace: {},
+
+					/**
+					 * Holds the fieldRules for the form.
+					 *
+					 * @attribute fieldRules
+					 * @default {}
+					 * @type Object
+					 */
 					fieldRules: {},
+
+					/**
+					 * Returns _onSubmit method.
+					 *
+					 * @attribute onSubmit
+					 * @type Object
+					 * @return _onSubmit
+					 */
 					onSubmit: {
 						valueFn: function() {
 							var instance = this;
@@ -67,9 +124,25 @@ AUI.add(
 					}
 				},
 
+
+				/**
+				 * Static property used to define which component it extends.
+				 *
+				 * @property EXTENDS
+				 * @type Object
+				 * @static
+				 */
 				EXTENDS: A.Base,
 
 				prototype: {
+
+					/**
+					 * Construction logic executed during `A.Form` instantiation.
+					 * Lifecycle.
+					 * 
+					 * @method initializer
+					 * @protected
+					 */
 					initializer: function() {
 						var instance = this;
 
@@ -104,6 +177,12 @@ AUI.add(
 						}
 					},
 
+					/**
+              				 * Bind the events on the `A.Form` Lifecycle. 
+					 *
+					 * @method _bindForm
+					 * @protected
+					 */
 					_bindForm: function() {
 						var instance = this;
 
@@ -115,6 +194,13 @@ AUI.add(
 						formNode.delegate(['blur', 'focus'], A.bind('_onFieldFocusChange', instance), 'button,input,select,textarea');
 					},
 
+					/**
+					 * Default submission method for the form.
+					 * 
+					 * @method _defaultSubmitFn
+					 * @param event
+					 * @protected
+  					 */
 					_defaultSubmitFn: function(event) {
 						var instance = this;
 
@@ -123,6 +209,13 @@ AUI.add(
 						}
 					},
 
+					/**
+					 * Changes focus to a newly selected field.
+					 * 
+					 * @method _onFieldFocusChange
+					 * @param event
+					 * @protected
+  					 */
 					_onFieldFocusChange: function(event) {
 						var instance = this;
 
@@ -133,6 +226,13 @@ AUI.add(
 						}
 					},
 
+					/**
+					 * Triggers when the form is submitted.
+					 *
+					 * @method _onSubmit
+					 * @param event
+					 * @protected
+  					 */
 					_onSubmit: function(event) {
 						var instance = this;
 
@@ -146,6 +246,13 @@ AUI.add(
 						);
 					},
 
+					/**
+					 * Triggers when the form is submitted.
+					 *
+					 * @method _onValidatorSubmit
+					 * @param event
+					 * @protected
+  					 */
 					_onValidatorSubmit: function(event) {
 						var instance = this;
 
@@ -154,6 +261,16 @@ AUI.add(
 						onSubmit.call(instance, event.validator.formEvent);
 					},
 
+					/**
+					 * Processes the fieldRules attribute for 
+					 * the form.
+					 *
+					 * @method _processFieldRule
+					 * @param rules
+					 * @param strings
+					 * @param rule
+					 * @protected
+  					 */
 					_processFieldRule: function(rules, strings, rule) {
 						var instance = this;
 
@@ -198,12 +315,28 @@ AUI.add(
 					}
 				},
 
+				/**
+				 * Gets the id of the form.
+				 *
+				 * @method get
+				 * @param id
+				 * @return _INSTANCES[id]
+				 * @protected
+				 */
 				get: function(id) {
 					var instance = this;
 
 					return instance._INSTANCES[id];
 				},
 
+				/**
+				 * Registers the form.
+				 *
+				 * @method register
+				 * @param config
+				 * @return form 
+				 * @protected
+				 */
 				register: function(config) {
 					var instance = this;
 
@@ -224,6 +357,11 @@ AUI.add(
 					return form;
 				},
 
+				/**
+				 * Creates a new empty Object.
+				 *
+				 * @method _INSTANCES
+				 */
 				_INSTANCES: {}
 			}
 		);
