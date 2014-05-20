@@ -1,6 +1,13 @@
 AUI.add(
 	'liferay-pagination',
 	function(A) {
+
+		/**
+		 * The Pagination Component.
+		 *
+		 * @module liferay-pagination
+		 */
+
 		var Lang = A.Lang;
 		var AArray = A.Array;
 		var ANode = A.Node;
@@ -22,33 +29,91 @@ AUI.add(
 
 		var STRINGS = 'strings';
 
+		/**
+		 * A base class for `A.Pagination`.
+		 *
+		 * @class A.Pagination
+		 * @extends Base
+		 * @param {Object} config Object literal specifying
+		 * widget configuration properties.
+		 * @constructor
+		 */
 		var Pagination = A.Component.create(
 			{
+				/**
+				 * static property used to define the default attribute
+				 * configuration for the `A.Pagination`.
+				 *
+				 * @property ATTRS
+				 * @type Object
+				 * @static
+				 */
 				ATTRS: {
+
+					/**
+					 * Defines the number of items per page.
+					 *
+					 * @attribute itemsPerPage
+					 * @default 20
+					 * @type Number
+					 */
 					itemsPerPage: {
 						validator: Lang.isNumber,
 						value: 20
 					},
 
+					/**
+					 * Defines the list of items per page.
+					 *
+					 * @attribute itemsPerPageList
+					 * @default [5, 10, 20, 30, 50, 75]
+					 * @type Array
+					 */
 					itemsPerPageList: {
 						validator: Lang.isArray,
 						value: [5, 10, 20, 30, 50, 75]
 					},
 
+					/**
+					 * Provides a string to identify the namespace.
+					 *
+					 * @attribute namespace
+					 * @type String
+					 */
 					namespace: {
 						validator: Lang.isString
 					},
 
+					/**
+					 * Defines the number of results found in a search.
+					 *
+					 * @attribute results
+					 * @default 0
+					 * @type Number
+					 */
 					results: {
 						validator: Lang.isNumber,
 						value: 0
 					},
 
+					/**
+					 * Defines the selected Item.
+					 *
+					 * @attribute selectedItem
+					 * @default 0
+					 * @type Number
+					 */
 					selectedItem: {
 						validator: Lang.isNumber,
 						value: 0
 					},
 
+					/**
+					 * Collection of strings used to label elements of the UI.
+					 *
+					 * @attribute Strings
+					 * @type Object
+					 */
 					strings: {
 						setter: function(value) {
 							return A.merge(
@@ -66,14 +131,34 @@ AUI.add(
 						validator: Lang.isObject
 					},
 
+					/**
+					 * If true, the results are visible.
+					 *
+					 * @attribute visible
+					 * @type Boolean
+					 */
 					visible: {
 						setter: '_uiSetVisible',
 						validator: Lang.isBoolean
 					}
 				},
 
+				/**
+				 * Static property used to define which component it extends.
+				 *
+				 * @property EXTENDS
+				 * @type String
+				 * @static
+				 */
 				EXTENDS: A.Pagination,
 
+				/**
+				 * Static property which provides a string to identify the class.
+				 *
+				 * @property NAME
+				 * @type String
+				 * @static
+				 */
 				NAME: NAME,
 
 				prototype: {
@@ -105,6 +190,12 @@ AUI.add(
 
 					TPL_RESULTS_MESSAGE_SHORT: '{showing} {x} {results}.',
 
+					/**
+				 	 * Render the Pagination component instance. Lifecycle.
+				 	 *
+				 	 * @method renderUI
+				 	 * @protected
+				 	 */
 					renderUI: function() {
 						var instance = this;
 
@@ -193,6 +284,12 @@ AUI.add(
 						Liferay.Menu.register(deltaSelectorId);
 					},
 
+					/**
+				 	 * Bind the events on the Pagination UI. Lifecycle.
+				 	 *
+				 	 * @method bindUI
+				 	 * @protected
+				 	 */
 					bindUI: function() {
 						var instance = this;
 
@@ -207,18 +304,39 @@ AUI.add(
 						instance.on('itemsPerPageChange', instance._onItemsPerPageChange, instance);
 					},
 
+					/**
+				 	 * Destructor lifecycle implementation for the `A.Pagination` class.
+				 	 *
+				 	 * @method destructor
+				 	 * @protected
+				 	 */
 					destructor: function() {
 						var instance = this;
 
 						(new A.EventHandle(instance._eventHandles)).detach();
 					},
 
+					/**
+				 	 * Fires after a change in the results.
+				 	 *
+				 	 * @method _afterResultsChange
+					 * @param event
+				 	 * @protected
+				 	 */
 					_afterResultsChange: function(event) {
 						var instance = this;
 
 						instance._syncResults();
 					},
 
+					/**
+				 	 * Updates the 'state' Object when there is a 
+					 * change in the number of items per page.
+					 *
+				 	 * @method _dispatchRequest
+					 * @param {Object} state
+				 	 * @protected
+				 	 */
 					_dispatchRequest: function(state) {
 						var instance = this;
 
@@ -229,6 +347,13 @@ AUI.add(
 						Pagination.superclass._dispatchRequest.call(instance, state);
 					},
 
+					/**
+				 	 * Gets the strings for the items per page labels.
+				 	 *
+				 	 * @method _getLabelContent
+					 * @param itemsPerPage
+				 	 * @protected
+				 	 */
 					_getLabelContent: function(itemsPerPage) {
 						var instance = this;
 
@@ -254,6 +379,14 @@ AUI.add(
 						return results;
 					},
 
+					/**
+				 	 * Retrieves the content to populate the results.
+				 	 *
+				 	 * @method _getResultsContent
+					 * @param page
+					 * @param itemsPerPage
+				 	 * @protected
+				 	 */					
 					_getResultsContent: function(page, itemsPerPage) {
 						var instance = this;
 
@@ -289,6 +422,13 @@ AUI.add(
 						return Lang.sub(tpl, values);
 					},
 
+					/**
+				 	 * Fires when the page changes.
+				 	 *
+				 	 * @method _onChangeRequest
+					 * @param event
+				 	 * @protected
+				 	 */
 					_onChangeRequest: function(event) {
 						var instance = this;
 
@@ -301,6 +441,13 @@ AUI.add(
 						instance._syncResults(page, itemsPerPage);
 					},
 
+					/**
+				 	 * Fires when a page number is clicked on. 
+				 	 *
+				 	 * @method _onItemClick
+					 * @param event
+				 	 * @protected
+				 	 */	
 					_onItemClick: function(event) {
 						var instance = this;
 
@@ -309,6 +456,13 @@ AUI.add(
 						instance.set(ITEMS_PER_PAGE, itemsPerPage);
 					},
 
+					/**
+				 	 * Fires when the items per page change. 
+				 	 *
+				 	 * @method _onItemsPerPageChange
+					 * @param event
+				 	 * @protected
+				 	 */
 					_onItemsPerPageChange: function(event) {
 						var instance = this;
 
@@ -328,6 +482,13 @@ AUI.add(
 						instance.set('visible', !!(results && results > itemsPerPage));
 					},
 
+					/**
+				 	 * Syncs the page numbers with the amount of results. 
+				 	 *
+				 	 * @method _syncLabel
+					 * @param itemsPerPage
+				 	 * @protected
+				 	 */
 					_syncLabel: function(itemsPerPage) {
 						var instance = this;
 
@@ -337,6 +498,14 @@ AUI.add(
 						instance._deltaSelector.one('.lfr-icon-menu-text').html(results.title);
 					},
 
+					/**
+				 	 * Updates the results.  
+				 	 *
+				 	 * @method _syncResults
+					 * @param page
+					 * @param itemsPerPage
+				 	 * @protected
+				 	 */
 					_syncResults: function(page, itemsPerPage) {
 						var instance = this;
 
@@ -345,6 +514,13 @@ AUI.add(
 						instance._searchResults.html(result);
 					},
 
+					/**
+				 	 * Sets the visibility on the UI. 
+				 	 *
+				 	 * @method _uiSetVisible
+					 * @param val
+				 	 * @protected
+				 	 */
 					_uiSetVisible: function(val) {
 						var instance = this;
 
