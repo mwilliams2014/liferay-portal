@@ -1,6 +1,13 @@
 AUI.add(
 	'liferay-progress',
 	function(A) {
+
+		/**
+		 * the Liferay Progress module.
+		 *
+		 * @module liferay-progress
+		 */
+
 		var Lang = A.Lang;
 
 		var STR_EMPTY = '';
@@ -13,30 +20,91 @@ AUI.add(
 
 		var TPL_URL_UPDATE = themeDisplay.getPathMain() + '/portal/progress_poller?progressId={0}&sessionKey={1}&updatePeriod={2}';
 
+		/**
+		 * A base class for `A.Progress`
+		 *
+		 * @class A.Progress
+		 * @extends Base
+		 * @param {Object} config Object literal specifying
+		 * widget configuration properties.
+		 * @constructor
+		 */
 		var Progress = A.Component.create(
 			{
+				
+				/**
+				 * Static property used to define the default attribute 
+				 * configuration for the `A.Progress`.
+				 *
+				 * @property ATTRS
+				 * @type Object
+				 * @static
+				 */
 				ATTRS: {
+
+					/**
+					 * Displays the progress value in a string. 
+					 *
+					 * @attribute message
+					 * @default " "
+					 * @type String
+					 */
 					message: {
 						validator: Lang.isString,
 						value: STR_EMPTY
 					},
 
+					/**
+					 * Holds a string value of the sessionKey.
+					 *
+					 * @attribute sessionKey
+					 * @default " "
+					 * @type String
+					 */
 					sessionKey: {
 						validator: Lang.isString,
 						value: STR_EMPTY
 					},
 
+					/**
+					 * Defines the time it takes to update the progress in ms.
+					 *
+					 * @attribute updatePeriod
+					 * @default 1000
+					 * @type Number
+					 */
 					updatePeriod: {
 						validator: Lang.isNumber,
 						value: 1000
 					}
 				},
 
+				/**
+				 * static property used to define which component it extends.
+				 *
+				 * @property EXTENDS
+				 * @type Object
+				 * @static
+				 */
 				EXTENDS: A.ProgressBar,
 
+				/**
+				 * static property which provides a string to identify the class.
+				 *
+				 * @property NAME
+				 * @type String
+				 * @static
+				 */
 				NAME: 'progress',
 
 				prototype: {
+
+					/**
+					 * Render the Progress component instance. Lifecycle.
+					 *
+					 * @method renderUI
+					 * @protected
+					 */
 					renderUI: function() {
 						var instance = this;
 
@@ -51,6 +119,12 @@ AUI.add(
 						instance._frame = frame;
 					},
 
+					/**
+					 * Bind the events on the Progress UI. Lifecycle.
+					 *
+					 * @method bindUI
+					 * @protected
+					 */
 					bindUI: function() {
 						var instance = this;
 
@@ -62,6 +136,12 @@ AUI.add(
 						instance._iframeLoadHandle = instance._frame.on('load', instance._onIframeLoad, instance);
 					},
 
+					/**
+					 * Start the progress.
+					 *
+					 * @method startProgress
+					 * @protected
+					 */
 					startProgress: function() {
 						var instance = this;
 
@@ -81,6 +161,12 @@ AUI.add(
 						);
 					},
 
+					/**
+					 * Update the progress.
+					 *
+					 * @method updateProgress
+					 * @protected
+					 */
 					updateProgress: function() {
 						var instance = this;
 
@@ -96,6 +182,12 @@ AUI.add(
 						instance._frame.set('src', url);
 					},
 
+					/**
+					 * After the progress completes remove the UI for the progress.
+					 *
+					 * @method _afterComplete
+					 * @protected
+					 */
 					_afterComplete: function(event) {
 						var instance = this;
 
@@ -106,6 +198,12 @@ AUI.add(
 						instance._iframeLoadHandle.detach();
 					},
 
+					/**
+					 * Update the message label with the current progress value.
+					 *
+					 * @method _afterValueChange
+					 * @protected
+					 */
 					_afterValueChange: function(event) {
 						var instance = this;
 
@@ -118,6 +216,13 @@ AUI.add(
 						instance.set('label', label);
 					},
 
+					/**
+					 * Fires after the `updatePeriod` has completed and sets the 
+					 * location of the contentWindow for the progress.
+					 *
+					 * @method _onIframeLoad
+					 * @protected
+					 */
 					_onIframeLoad: function(event) {
 						var instance = this;
 
