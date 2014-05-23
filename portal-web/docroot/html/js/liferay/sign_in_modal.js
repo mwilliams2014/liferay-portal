@@ -1,12 +1,37 @@
 AUI.add(
 	'liferay-sign-in-modal',
 	function(A) {
+
+		/**
+		 * the Liferay Sign in Modal module
+		 *
+		 * @module liferay-sign-in-modal
+		 */
+
 		var	NAME = 'signinmodal';
 
 		var WIN = A.config.win;
 
+		/**
+		 * A base class for `A.SignInModal`
+		 *
+		 * @class A.SignInModal
+		 * @extends Base
+		 * @param {Object} config Object literal specifying
+		 * widget configuration properties.
+		 * @constructor
+		 */
 		var SignInModal = A.Component.create(
 			{
+
+				/**
+				 * static property used to define the default attribute 
+				 * configuration for the `A.SignInModal`.
+				 *
+				 * @property ATTRS
+				 * @type Object
+				 * @static
+				 */
 				ATTRS: {
 					resetFormValidator: {
 						value: true
@@ -18,13 +43,42 @@ AUI.add(
 					}
 				},
 
+				/**
+				 * static property used to define which component it extends. 
+				 *
+				 * @property EXTENDS
+				 * @type Object
+				 * @static
+				 */
 				EXTENDS: A.Plugin.Base,
 
+				/**
+				 * static property which provides a string to identify the class. 
+				 *
+				 * @property NAME
+				 * @type String
+				 * @static
+				 */
 				NAME: NAME,
 
+				/**
+				 * Static property provides a string to identify the namespace. 
+				 *
+				 * @property NS
+				 * @type String
+				 * @static
+				 */
 				NS: NAME,
 
 				prototype: {
+
+					/**
+				 	 * Construction logic executed during SignInModal instantiation.
+				 	 * Lifecycle.
+				 	 *
+				 	 * @method initializer
+				 	 * @protected
+				 	 */
 					initializer: function(config) {
 						var instance = this;
 
@@ -56,12 +110,24 @@ AUI.add(
 						instance._bindUI();
 					},
 
+					/**
+				 	 * Bind the events on the SignInModal UI. Lifecycle.
+				 	 *
+				 	 * @method _bindUI
+				 	 * @protected
+				 	 */
 					_bindUI: function() {
 						var instance = this;
 
 						instance._host.on('click', A.bind('_load', instance));
 					},
 
+					/**
+				 	 * If the sign in nodes are loaded, call the `_loadDOM` method.
+				 	 *
+				 	 * @method _load
+				 	 * @protected
+				 	 */
 					_load: function(event) {
 						var instance = this;
 
@@ -75,6 +141,12 @@ AUI.add(
 						}
 					},
 
+					/**
+				 	 * Load the DOM.
+				 	 *
+				 	 * @method _loadDOM
+				 	 * @protected
+				 	 */
 					_loadDOM: function() {
 						var instance = this;
 
@@ -89,6 +161,12 @@ AUI.add(
 						Liferay.Util.focusFormField('input:text');
 					},
 
+					/**
+				 	 * Fires if the sign in nodes have not been loaded.
+				 	 *
+				 	 * @method _loadIO
+				 	 * @protected
+				 	 */
 					_loadIO: function() {
 						var instance = this;
 
@@ -114,12 +192,24 @@ AUI.add(
 						);
 					},
 
+					/**
+				 	 * Redirect the browser to the host URL.
+				 	 *
+				 	 * @method _redirectPage
+				 	 * @protected
+				 	 */
 					_redirectPage: function() {
 						var instance = this;
 
 						WIN.location.href = instance._signInURL;
 					},
 
+					/**
+				 	 * Fires after the DOM is loaded and sets the sign-in content for the DOM.
+				 	 *
+				 	 * @method _setModalContent
+				 	 * @protected
+				 	 */
 					_setModalContent: function(content) {
 						var instance = this;
 
