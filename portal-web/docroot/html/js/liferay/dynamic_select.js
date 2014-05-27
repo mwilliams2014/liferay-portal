@@ -1,6 +1,12 @@
 AUI.add(
 	'liferay-dynamic-select',
 	function(A) {
+
+		/**
+		 * The Dynamic Select Component.
+		 *
+		 * @module liferay-dynamic-select
+		 */
 		var sortByValue = function(a, b) {
 			var pos = a.indexOf('">');
 
@@ -78,7 +84,25 @@ AUI.add(
 			);
 		};
 
+		/**
+		 * A base class for `DynamicSelect`.
+		 *
+		 * @class A.DynamicSelect
+		 * @extends Base
+		 * @param {Object} config Object literal specifying
+		 * widget configuration properties.
+		 *
+		 * @constructor
+		 */
 		DynamicSelect.prototype = {
+
+			/**
+			 * Identifies the next select data and updates the selection.  
+			 *
+			 * @method _callSelectData
+			 * @param i
+			 * @protected
+			 */
 			_callSelectData: function(i) {
 				var instance = this;
 
@@ -97,6 +121,14 @@ AUI.add(
 				}
 			},
 
+			/**
+			 * Update selection.
+			 *
+			 * @method _updateSelect
+			 * @param i
+			 * @param list
+			 * @protected
+			 */
 			_updateSelect: function(i, list) {
 				var instance = this;
 
