@@ -9,6 +9,13 @@ AUI.add(
 		 */
 
 		var Icon = {
+				
+			/**
+			 * Sets up the variables and conditions for the methods that follow.  
+			 * 
+			 * @method register
+			 * @param config
+			 */
 			register: function(config) {
 				var instance = this;
 
@@ -37,12 +44,14 @@ AUI.add(
 			},
 
 			/**
-			 * Triggers when a click is fired on the icon, if the icon is a
-			 * link.
+			 * Triggers when a click is fired on the icon, if the icon 
+			 * is a link.
+			 * If the icon is not configured to use dialog, prevent the
+			 * default submission.
 			 *
 			 * @method _forcePost
 			 * @param event
-			 * @protected
+			 * @private
 			 */
 			_forcePost: function(event) {
 				var instance = this;
@@ -56,11 +65,13 @@ AUI.add(
 
 			/**
 			 * Triggers when the mouse hovers over the icon.
-			 *
+			 * If the current target is an image, set the img src 
+			 * attribute to the src param.
+			 * 
 			 * @method _onMouseHover
 			 * @param event
 			 * @param src
-			 * @protected
+			 * @private
 			 */
 			_onMouseHover: function(event, src) {
 				var instance = this;
@@ -74,11 +85,11 @@ AUI.add(
 
 			/**
 			 * Triggers when a click is fired on the icon, if the icon is
-			 * configured to use a dialog.
+			 * configured to use a dialog and opens a dialog window.
 			 *
 			 * @method _useDialog
 			 * @param event
-			 * @protected
+			 * @private
 			 */
 			_useDialog: function(event) {
 				Liferay.Util.openInDialog(event, event.currentTarget);
