@@ -1388,7 +1388,7 @@
 			<name>data</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>java.util.Map</type>
+			<type>java.util.Date</type>
 		</attribute>
 		<attribute>
 			<description>Sets the icon from a Bootstrap icon CSS Class. Note that any image for the <![CDATA[<code>image</code>]]> attribute takes precedence. Icon CSS classes to specify for this attribute can be found at <![CDATA[<a href="http://marcoceppi.github.io/bootstrap-glyphicons/" >http://marcoceppi.github.io/bootstrap-glyphicons/</a>]]>.</description>
