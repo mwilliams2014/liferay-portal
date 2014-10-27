@@ -69,7 +69,7 @@ public class BaseButtonTag extends com.liferay.taglib.util.IncludeTag {
 		return _onClick;
 	}
 
-	public java.lang.Object getPrimary() {
+	public boolean getPrimary() {
 		return _primary;
 	}
 
@@ -143,7 +143,7 @@ public class BaseButtonTag extends com.liferay.taglib.util.IncludeTag {
 		setScopedAttribute("onClick", onClick);
 	}
 
-	public void setPrimary(java.lang.Object primary) {
+	public void setPrimary(boolean primary) {
 		_primary = primary;
 
 		setScopedAttribute("primary", primary);
@@ -184,7 +184,7 @@ public class BaseButtonTag extends com.liferay.taglib.util.IncludeTag {
 		_id = null;
 		_name = null;
 		_onClick = null;
-		_primary = null;
+		_primary = false;
 		_type = "button";
 		_useDialog = false;
 		_useNamespace = true;
@@ -222,10 +222,10 @@ public class BaseButtonTag extends com.liferay.taglib.util.IncludeTag {
 	protected static final String _ATTRIBUTE_NAMESPACE = "aui:button:";
 
 	private static final String _END_PAGE =
-		"/html/taglib/aui/button/end.jsp";
+		"/html/taglib/aui/Button/end.jsp";
 
 	private static final String _START_PAGE =
-		"/html/taglib/aui/button/start.jsp";
+		"/html/taglib/aui/Button/start.jsp";
 
 	private java.lang.String _cssClass = null;
 	private java.lang.Object _data = null;
@@ -236,7 +236,7 @@ public class BaseButtonTag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.String _id = null;
 	private java.lang.String _name = null;
 	private java.lang.String _onClick = null;
-	private java.lang.Object _primary = null;
+	private boolean _primary = false;
 	private java.lang.String _type = "button";
 	private boolean _useDialog = false;
 	private boolean _useNamespace = true;
