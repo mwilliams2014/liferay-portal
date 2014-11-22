@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 /**
@@ -49,10 +49,6 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class MDRActionStagedModelDataHandlerTest
 	extends BaseStagedModelDataHandlerTestCase {
-
-	@ClassRule
-	public static TransactionalTestRule transactionalTestRule =
-		new TransactionalTestRule();
 
 	@Override
 	public void setUp() throws Exception {
@@ -71,6 +67,10 @@ public class MDRActionStagedModelDataHandlerTest
 			_layout.getType(), _layout.getHidden(), _layout.getFriendlyURL(),
 			serviceContext);
 	}
+
+	@Rule
+	public TransactionalTestRule transactionalTestRule =
+		new TransactionalTestRule();
 
 	@Override
 	protected Map<String, List<StagedModel>> addDependentStagedModelsMap(

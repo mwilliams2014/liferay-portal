@@ -30,7 +30,7 @@ import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -441,10 +441,6 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(listeners = {MainServletExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class SQLNullTest {
-
-	@ClassRule
-	public static TransactionalTestRule transactionalTestRule =
-		new TransactionalTestRule();
 
 	@Test
 	public void testBlankStringEqualsNull() {
@@ -919,6 +915,10 @@ public class SQLNullTest {
 			_sessionFactory.closeSession(session);
 		}
 	}
+
+	@Rule
+	public TransactionalTestRule transactionalTestRule =
+		new TransactionalTestRule();
 
 	protected boolean isDBType(String dBType) {
 		DB db = DBFactoryUtil.getDB();

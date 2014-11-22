@@ -69,9 +69,8 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import org.springframework.core.io.FileSystemResourceLoader;
@@ -89,9 +88,6 @@ import org.springframework.mock.web.MockServletContext;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class CompanyLocalServiceTest {
-
-	@ClassRule
-	public static TestRule transactionalTestRule = new TransactionalTestRule();
 
 	@Before
 	public void setUp() {
@@ -502,6 +498,10 @@ public class CompanyLocalServiceTest {
 	public void testUpdateValidVirtualHostNames() throws Exception {
 		testUpdateVirtualHostNames(new String[] {"abc.com"}, false);
 	}
+
+	@Rule
+	public TransactionalTestRule transactionalTestRule =
+		new TransactionalTestRule();
 
 	protected Company addCompany() throws Exception {
 		String webId = RandomTestUtil.randomString() + "test.com";

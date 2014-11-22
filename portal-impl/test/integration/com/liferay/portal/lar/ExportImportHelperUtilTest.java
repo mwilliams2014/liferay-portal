@@ -83,7 +83,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -101,10 +101,6 @@ import org.powermock.api.mockito.PowerMockito;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class ExportImportHelperUtilTest extends PowerMockito {
-
-	@ClassRule
-	public static TransactionalTestRule transactionalTestRule =
-		new TransactionalTestRule();
 
 	@Before
 	public void setUp() throws Exception {
@@ -638,6 +634,10 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 
 		zipReader.close();
 	}
+
+	@Rule
+	public TransactionalTestRule transactionalTestRule =
+		new TransactionalTestRule();
 
 	protected void assertLinksToLayouts(
 		String content, Layout layout, long groupId) {
