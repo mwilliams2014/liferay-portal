@@ -4428,14 +4428,14 @@
 		<tag-class>com.liferay.taglib.ui.SearchIteratorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Adds a search-paginator to the search container. The default value is <![CDATA[<code>true</code>]]></description>
+			<description>Sets whether to add a search-paginator to the search container. The default value is <![CDATA[<code>true</code>]]>.</description>
 			<name>paginate</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>Sets all configurable porperties of the search container such as <![CDATA[<code>cur</code>]]> and <![CDATA[<code>curParam</code>]]>. These properties are set with <![CDATA[<code>searchContainer.getCur()</code>]]> and <![CDATA[<code>searchContainer.getCurParam()</code>]]> respectively.</description>
+			<description>Sets all configurable properties of the search container such as <![CDATA[<code>cur</code>]]> and <![CDATA[<code>curParam</code>]]>. These properties are set with <![CDATA[<code>searchContainer.getCur()</code>]]> and <![CDATA[<code>searchContainer.getCurParam()</code>]]> respectively.</description>
 			<name>searchContainer</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4453,7 +4453,7 @@
 		<tag-class>com.liferay.taglib.ui.SearchPaginatorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Sets the id of the iterator container</description>
+			<description>Identifies the component instance.</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4505,13 +4505,13 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets terms to be used and displayed thought the search instance. Term examples include <![CDATA[<code>keywords</code>]]>, <![CDATA[<code>advancedSearch</code>]]>, and <![CDATA[<code>description</code>]]>.</description>
+			<description>Sets terms to be used and displayed through the search instance. Term examples include <![CDATA[<code>keywords</code>]]>, <![CDATA[<code>advancedSearch</code>]]>, and <![CDATA[<code>description</code>]]>.</description>
 			<name>displayTerms</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the base HTML id for all components of the search instance.</description>
+			<description>Identifies the component instance.</description>
 			<name>id</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
