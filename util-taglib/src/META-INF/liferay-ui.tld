@@ -1378,13 +1378,13 @@
 		<tag-class>com.liferay.taglib.ui.FlagsTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Passes the java class name of the flagged asset.</description>
+			<description>Passes the Java class name of the flagged asset.</description>
 			<name>className</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Passes the entry id of the flagged asset.</description>
+			<description>Passes the entry ID of the flagged asset.</description>
 			<name>classPK</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1409,7 +1409,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Passes the user id of the user who flagged the asset.</description>
+			<description>Passes the user ID of the user who flagged the asset.</description>
 			<name>reportedUserId</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2158,6 +2158,7 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the first date to be able to select in the datepicker.</description>
 			<name>firstEnabledDate</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2169,6 +2170,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the latest date to be able to select in the datepicker.</description>
 			<name>lastEnabledDate</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3409,7 +3411,7 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Sets a variable name to refer to the cur value of the component.</description>
+			<description>Sets a variable name to refer to the <![CDATA[<code>cur</code>]]> value of the component.</description>
 			<name>curParam</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3447,7 +3449,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets javascript to be called when the <![CDATA[<code>first</code>]]>, <![CDATA[<code>previous</code>]]>, <![CDATA[<code>next</code>]]>, or <![CDATA[<code>last</code>]]> links are clicked if the url property is not set.</description>
+			<description>Sets JavaScript to be called when the <![CDATA[<code>first</code>]]>, <![CDATA[<code>previous</code>]]>, <![CDATA[<code>next</code>]]>, or <![CDATA[<code>last</code>]]> links are clicked if the URL property is not set.</description>
 			<name>jsCall</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3479,7 +3481,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the base url of the iterator. Parameters are added and removed from this as the user navigates through pages.</description>
+			<description>Sets the base URL of the iterator. Parameters are added and removed from this as the user navigates through pages.</description>
 			<name>url</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3850,6 +3852,7 @@
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
 			<description>Sets the <![CDATA[<code>delta</code>]]> attribute as configurable by users.</description>
@@ -3909,7 +3912,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the column ordering as ascending or descending. Values are <![CDATA[<code>"asc"</code>]]> or <![CDATA[<code>"desc"</code>]]>.</description>
+			<description>Sets the column ordering as ascending or descending. Values are <![CDATA[<code>asc</code>]]> or <![CDATA[<code>desc</code>]]>.</description>
 			<name>orderByType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3940,15 +3943,16 @@
 			<name>total</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Sets the variable name for the results of the <![CDATA[<code>total</code>]]> attribute. The default is <![CDATA[<code>"total"</code>]]>.</description>
+			<description>Sets the variable name for the results of the <![CDATA[<code>total</code>]]> attribute. The default is <![CDATA[<code>total</code>]]>.</description>
 			<name>totalVar</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the variable name for the <![CDATA[<code>SearchContainer</code>]]> object. The default is <![CDATA[<code>"searchContainer"</code>]]>.</description>
+			<description>Sets the variable name for the <![CDATA[<code>SearchContainer</code>]]> object. The default is <![CDATA[<code>searchContainer</code>]]>.</description>
 			<name>var</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3984,7 +3988,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the column name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4001,7 +4004,7 @@
 		<tag-class>com.liferay.taglib.ui.SearchContainerColumnDateTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Sets the horizontal alignment of the column contents. The default is <![CDATA[<code>"left"</code>]]>.</description>
+			<description>Sets the horizontal alignment of the column contents. The default is <![CDATA[<code>left</code>]]>.</description>
 			<name>align</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4011,9 +4014,10 @@
 			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Sets the CSS class for the column.</description>
+			<description>Sets the CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4030,16 +4034,17 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the column name.</description>
+			<description>Sets the column's name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the column as sortable.</description>
+			<description>Sets whether to set the column as sortable. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>orderable</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
 			<description>Sets the object's property to sort the column by.</description>
@@ -4054,7 +4059,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the vertical alignment of the column contents. The default is <![CDATA[<code>"middle"</code>]]>.</description>
+			<description>Sets the vertical alignment of the column contents. The default is <![CDATA[<code>middle</code>]]>.</description>
 			<name>valign</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4072,7 +4077,7 @@
 		<tag-class>com.liferay.taglib.ui.SearchContainerColumnJSPTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Sets the horizontal alignment of the column contents. The default is <![CDATA[<code>"left"</code>]]>.</description>
+			<description>Sets the horizontal alignment of the column contents. The default is <![CDATA[<code>left</code>]]>.</description>
 			<name>align</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4082,9 +4087,10 @@
 			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Sets the CSS class for the column.</description>
+			<description>Sets the CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4117,7 +4123,7 @@
 		<tag-class>com.liferay.taglib.ui.SearchContainerColumnStatusTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Sets the horizontal alignment of the column contents. The default is <![CDATA[<code>"left"</code>]]>.</description>
+			<description>Sets the horizontal alignment of the column contents. The default is <![CDATA[<code>left</code>]]>.</description>
 			<name>align</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4127,9 +4133,10 @@
 			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Sets the CSS class for the column.</description>
+			<description>Sets the CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4151,10 +4158,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the column as sortable.</description>
+			<description>Sets whether to set the column as sortable. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>orderable</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
 			<description>Sets the object's property to sort the column by.</description>
@@ -4169,7 +4177,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the vertical alignment of the column contents. The default is <![CDATA[<code>"middle"</code>]]>.</description>
+			<description>Sets the vertical alignment of the column contents. The default is <![CDATA[<code>middle</code>]]>.</description>
 			<name>valign</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4214,9 +4222,10 @@
 			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Sets the CSS class for the column.</description>
+			<description>Sets the CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4237,10 +4246,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the column as sortable.</description>
+			<description>Sets whether to set the column as sortable. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>orderable</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
 			<description>Sets the object's property to sort the column by.</description>
@@ -4264,13 +4274,14 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Determines whether values are automatically translated.</description>
+			<description>Sets whether to automatically translate values. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>translate</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>Sets the vertical alignment of the column contents. The default is <![CDATA[<code>"middle"</code>]]>.</description>
+			<description>Sets the vertical alignment of the column contents. The default is <![CDATA[<code>middle</code>]]>.</description>
 			<name>valign</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
