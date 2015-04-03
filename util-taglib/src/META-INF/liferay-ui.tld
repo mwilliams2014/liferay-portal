@@ -916,6 +916,7 @@
 			<name>url</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 	</tag>
 	<tag>
@@ -1530,48 +1531,56 @@
 			<name>backURL</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
 			<description>Sets the name of each category in the form.</description>
 			<name>categoryNames</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String[]</type>
 		</attribute>
 		<attribute>
 			<description>Sets the name of each section within a category.</description>
 			<name>categorySections</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String[][]</type>
 		</attribute>
 		<attribute>
 			<description>Sets what type of navigation will be used. Options are <![CDATA[<code>steps</code>]]> and <![CDATA[<code>panel</code>]]>. The default display style is side navigation.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
 			<description>Sets the form's name.</description>
 			<name>formName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
 			<description>Sets HTML to append to the navigator. Examples include alternate form buttons, form instructions, or information about the form.</description>
 			<name>htmlBottom</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
 			<description>Sets HTML to prepend to the navigator.</description>
 			<name>htmlTop</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
 			<description>Sets the path to the formSection.jsp files folder <![CDATA[<code>/path/to/jsp/folder/</code>]]>.</description>
 			<name>jspPath</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
 			<description>Sets whether to show the <![CDATA[<code>Submit</code>]]> and <![CDATA[<code>Cancel</code>]]> buttons. The default value is <![CDATA[<code>true</code>]]>.</description>
@@ -3752,81 +3761,98 @@
 		<tag-class>com.liferay.taglib.ui.RSSTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the default maximum number of items to display. The default value is <![CDATA[<code>20</code>.]]>.</description>
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default style to display.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the default format for the rss feed. Options are <![CDATA[<code>atom_1.0</code>.]]>, <![CDATA[<code>rss_1.0</code>.]]>, and <![CDATA[<code>rss_2.0</code>.]]>.</description>
 			<name>feedType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the optional message displayed next to the RSS icon.</description>
 			<name>message</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the column name.</description>
+			<description>Sets the RSS feed name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the url to retrieve the feed information from.</description>
 			<name>resourceURL</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the url for the rss feed file.</description>
 			<name>url</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a configuration UI component for users to define RSS settings such as how many articles to display.</description>
 		<name>rss-settings</name>
 		<tag-class>com.liferay.taglib.ui.RSSSettingsTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the default maximum number of items to display. The default value is <![CDATA[<code>20</code>.]]>.</description>
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default style to display.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the available rss display styles for the user to choose from. Options are <![CDATA[<code>abstract</code>.]]>, <![CDATA[<code>full-content</code>.]]>, and <![CDATA[<code>title</code>.]]>.</description>
 			<name>displayStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets whether users are able to subscribe or not. Default value is  <![CDATA[<code>false</code>.]]>.</description>
 			<name>enabled</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default format for the rss feed. Options are <![CDATA[<code>atom_1.0</code>.]]>, <![CDATA[<code>rss_1.0</code>.]]>, and <![CDATA[<code>rss_2.0</code>.]]>.</description>
 			<name>feedType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Sets the name of the column.</description>
+			<description>Sets the RSS feed name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets whether the RSS feed has a name or not. The default value is <![CDATA[<code>false</code>.]]>.</description>
 			<name>nameEnabled</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 	</tag>
 	<tag>
