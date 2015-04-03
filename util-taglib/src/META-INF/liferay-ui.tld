@@ -907,13 +907,16 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates an image captcha with a corresponding verification input</description>
 		<name>captcha</name>
 		<tag-class>com.liferay.taglib.ui.CaptchaTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the source url for the captcha image</description>
 			<name>url</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 	</tag>
 	<tag>
@@ -1511,53 +1514,72 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a navigable form for multiple section forms. The navigation default is a side navigation box with links to each section but can be configured to either a progressive step navigation positioned above the form or vertically stacked accordion style sections that expand when clicked.</description>
 		<name>form-navigator</name>
 		<tag-class>com.liferay.taglib.ui.FormNavigatorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the url for the form cancel button.</description>
 			<name>backURL</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
+			<description>Sets the name of each category in the form.</description>
 			<name>categoryNames</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String[]</type>
 		</attribute>
 		<attribute>
+			<description>Sets the name of each section within a category.</description>
 			<name>categorySections</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String[][]</type>
 		</attribute>
 		<attribute>
+			<description>Sets what type of navigation will be used. Options are <![CDATA[<code>steps</code>]]> and <![CDATA[<code>panel</code>]]>. The default display style is side navigation.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
+			<description>Sets the name of the form.</description>
 			<name>formName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
+			<description>Sets any HTML to append the navigator. Examples include alternate form buttons, form instructions, or information about the form.</description>
 			<name>htmlBottom</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
+			<description>Sets any HTML to prepend the navigator.</description>
 			<name>htmlTop</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
+			<description>Sets the path to the formSection.jsp files folder <![CDATA[<code>/path/to/jsp/folder/</code>]]>.</description>
 			<name>jspPath</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
 		</attribute>
 		<attribute>
+			<description>Sets whether to show the <![CDATA[<code>Submit</code>]]> and <![CDATA[<code>Cancel</code>]]> buttons. The default value is <![CDATA[<code>true</code>]]>.</description>
 			<name>showButtons</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 	</tag>
 	<tag>
@@ -3376,70 +3398,88 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a page iterator for paginating through lists of items.</description>
 		<name>page-iterator</name>
 		<tag-class>com.liferay.taglib.ui.PageIteratorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets what page of items to display (first, second, third, etc.).</description>
 			<name>cur</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>Int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the parameter name of the cur value.</description>
 			<name>curParam</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets how many items to display per page.</description>
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>Int</type>
 		</attribute>
 		<attribute>
+			<description>Sets whether the user can choose the number of items displayed per page. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>deltaConfigurable</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<description>Sets the parameter name of the delta value.</description>
 			<name>deltaParam</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the name of the form.</description>
 			<name>formName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the id of the iterator container</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets javascript to be called when the &quot;first&quot;, &quot;previous&quot;, &quot;next&quot;, or &quot;last&quot; links are clicked if the url property is not set.</description>
 			<name>jsCall</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the max number of pages to iterate through.</description>
 			<name>maxPages</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the target of the &quot;first&quot;, &quot;previous&quot;, &quot;next&quot;, and &quot;last&quot; link buttons.</description>
 			<name>target</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the total number of items in the iterator.</description>
 			<name>total</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>Int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the type of iterator to display. Options are &quot;approximate&quot;, &quot;article&quot;, &quot;more&quot;, and &quot;regular&quot;.</description>
 			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the base url of the iterator. Parameters are added and removed from this as the user navigates through pages.</description>
 			<name>url</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3710,79 +3750,98 @@
 		<tag-class>com.liferay.taglib.ui.RSSTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the default maximum number of items to display. The default value is <![CDATA[<code>20</code>.]]>.</description>
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default style to display.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the default format for the rss feed. Options are <![CDATA[<code>atom_1.0</code>.]]>, <![CDATA[<code>rss_1.0</code>.]]>, and <![CDATA[<code>rss_2.0</code>.]]>.</description>
 			<name>feedType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the optional message displayed next to the RSS icon.</description>
 			<name>message</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the RSS feed name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the url to retrieve the feed information from.</description>
 			<name>resourceURL</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the url for the rss feed file.</description>
 			<name>url</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a configuration UI component for users to define RSS settings such as how many articles to display.</description>
 		<name>rss-settings</name>
 		<tag-class>com.liferay.taglib.ui.RSSSettingsTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the default maximum number of items to display. The default value is <![CDATA[<code>20</code>.]]>.</description>
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default style to display.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the available rss display styles for the user to choose from. Options are <![CDATA[<code>abstract</code>.]]>, <![CDATA[<code>full-content</code>.]]>, and <![CDATA[<code>title</code>.]]>.</description>
 			<name>displayStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets whether users are able to subscribe or not. Default value is  <![CDATA[<code>false</code>.]]>.</description>
 			<name>enabled</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default format for the rss feed. Options are <![CDATA[<code>atom_1.0</code>.]]>, <![CDATA[<code>rss_1.0</code>.]]>, and <![CDATA[<code>rss_2.0</code>.]]>.</description>
 			<name>feedType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the RSS feed name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets whether the RSS feed has a name or not. The default value is <![CDATA[<code>false</code>.]]>.</description>
 			<name>nameEnabled</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 	</tag>
 	<tag>
@@ -4383,40 +4442,49 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a search results page iterator with an optional paginator.</description>
 		<name>search-iterator</name>
 		<tag-class>com.liferay.taglib.ui.SearchIteratorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Adds a search-paginator to the search container. The default value is <![CDATA[<code>true</code>]]></description>
 			<name>paginate</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<description>Sets all configurable porperties of the search container such as <![CDATA[<code>cur</code>]]> and <![CDATA[<code>curParam</code>]]>. These properties are set with <![CDATA[<code>searchContainer.getCur()</code>]]> and <![CDATA[<code>searchContainer.getCurParam()</code>]]> respectively.</description>
 			<name>searchContainer</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the type of iterator to display. Options are <![CDATA[<code>approximate</code>]]>, <![CDATA[<code>article</code>]]>, <![CDATA[<code>more</code>]]>, and <![CDATA[<code>regular</code>]]>.</description>
 			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a page iterator to paginate through search results</description>
 		<name>search-paginator</name>
 		<tag-class>com.liferay.taglib.ui.SearchPaginatorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the id of the iterator container</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets all configurable porperties of the search container such as <![CDATA[<code>cur</code>]]> and <![CDATA[<code>curParam</code>]]>. These properties are set with <![CDATA[<code>searchContainer.getCur()</code>]]> and <![CDATA[<code>searchContainer.getCurParam()</code>]]> respectively.</description>
 			<name>searchContainer</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the type of iterator to display. Options are <![CDATA[<code>approximate</code>]]>, <![CDATA[<code>article</code>]]>, <![CDATA[<code>more</code>]]>, and <![CDATA[<code>regular</code>]]>.</description>
 			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4438,25 +4506,31 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a search instance that can be toggled between a basic and advanced search.</description>
 		<name>search-toggle</name>
 		<tag-class>com.liferay.taglib.ui.SearchToggleTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets whether the search input field is automatically focused. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>autoFocus</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>Boolean</type>
 		</attribute>
 		<attribute>
+			<description>Sets the label for the search button such as <![CDATA[<code>Search</code>]]> or <![CDATA[<code>Go</code>]]>.</description>
 			<name>buttonLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets terms to be used and displayed thought the search instance. Term examples include <![CDATA[<code>keywords</code>]]>, <![CDATA[<code>advancedSearch</code>]]>, and <![CDATA[<code>description</code>]]>.</description>
 			<name>displayTerms</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the base HTML id for all components of the search instance.</description>
 			<name>id</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
