@@ -12,15 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.executor;
-
-import com.liferay.portal.kernel.concurrent.ThreadPoolExecutor;
+package com.liferay.portal.model;
 
 /**
- * @author Shuyang Zhou
+ * @author Raymond Augé
  */
-public interface PortalExecutorFactory {
+public interface ModelHintsCallback {
 
-	public ThreadPoolExecutor createPortalExecutor(String name);
+	public void execute(ClassLoader classLoader, String name);
 
 }

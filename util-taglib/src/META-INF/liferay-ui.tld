@@ -3710,79 +3710,98 @@
 		<tag-class>com.liferay.taglib.ui.RSSTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the default maximum number of items to display. The default value is <![CDATA[<code>20</code>.]]>.</description>
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default style to display.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the default format for the rss feed. Options are <![CDATA[<code>atom_1.0</code>.]]>, <![CDATA[<code>rss_1.0</code>.]]>, and <![CDATA[<code>rss_2.0</code>.]]>.</description>
 			<name>feedType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the optional message displayed next to the RSS icon.</description>
 			<name>message</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the RSS feed name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the url to retrieve the feed information from.</description>
 			<name>resourceURL</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the url for the rss feed file.</description>
 			<name>url</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a configuration UI component for users to define RSS settings such as how many articles to display.</description>
 		<name>rss-settings</name>
 		<tag-class>com.liferay.taglib.ui.RSSSettingsTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the default maximum number of items to display. The default value is <![CDATA[<code>20</code>.]]>.</description>
 			<name>delta</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default style to display.</description>
 			<name>displayStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the available rss display styles for the user to choose from. Options are <![CDATA[<code>abstract</code>.]]>, <![CDATA[<code>full-content</code>.]]>, and <![CDATA[<code>title</code>.]]>.</description>
 			<name>displayStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets whether users are able to subscribe or not. Default value is  <![CDATA[<code>false</code>.]]>.</description>
 			<name>enabled</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<description>Sets the default format for the rss feed. Options are <![CDATA[<code>atom_1.0</code>.]]>, <![CDATA[<code>rss_1.0</code>.]]>, and <![CDATA[<code>rss_2.0</code>.]]>.</description>
 			<name>feedType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the RSS feed name.</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets whether the RSS feed has a name or not. The default value is <![CDATA[<code>false</code>.]]>.</description>
 			<name>nameEnabled</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 	</tag>
 	<tag>
@@ -4403,20 +4422,24 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a page iterator to paginate through search results.</description>
 		<name>search-paginator</name>
 		<tag-class>com.liferay.taglib.ui.SearchPaginatorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets the id of the iterator container.</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets all configurable porperties of the search container such as <![CDATA[<code>cur</code>]]> and <![CDATA[<code>curParam</code>]]>. These properties are set with <![CDATA[<code>searchContainer.getCur()</code>]]> and <![CDATA[<code>searchContainer.getCurParam()</code>]]> respectively.</description>
 			<name>searchContainer</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the type of iterator to display. Options are <![CDATA[<code>approximate</code>]]>, <![CDATA[<code>article</code>]]>, <![CDATA[<code>more</code>]]>, and <![CDATA[<code>regular</code>]]>.</description>
 			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4438,25 +4461,31 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Creates a search instance that can be toggled between a basic and advanced search.</description>
 		<name>search-toggle</name>
 		<tag-class>com.liferay.taglib.ui.SearchToggleTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>Sets whether the search input field is automatically focused. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>autoFocus</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<description>Sets the label for the search button such as <![CDATA[<code>Search</code>]]> or <![CDATA[<code>Go</code>]]>.</description>
 			<name>buttonLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets terms to be used and displayed thought the search instance. Term examples include <![CDATA[<code>keywords</code>]]>, <![CDATA[<code>advancedSearch</code>]]>, and <![CDATA[<code>description</code>]]>.</description>
 			<name>displayTerms</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the base HTML id for all components of the search instance.</description>
 			<name>id</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>

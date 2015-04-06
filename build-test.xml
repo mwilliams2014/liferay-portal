@@ -1212,8 +1212,10 @@
 
 	<macrodef name="start-android-device">
 		<sequential>
+			<fail message="Please set the property ${android.home}." unless="android.home" />
+
 			<execute>
-				echo no | android create avd -n deviceName -t android-19
+				echo no | ${android.home}/tools/android create avd -n deviceName -t android-19
 			</execute>
 
 			<echo file="${user.home}/.android/avd/deviceName.avd/config.ini" append="true">
@@ -1222,41 +1224,45 @@
 
 			<exec executable="/bin/bash" os="${os.unix}" spawn="true">
 				<arg value="-c" />
-				<arg value="emulator -avd deviceName -no-boot-anim" />
+				<arg value="${android.home}/tools/emulator -avd deviceName -no-boot-anim" />
 			</exec>
 
 			<exec executable="cmd.exe" os="${os.windows}">
 				<arg value="/c" />
-				<arg value="emulator -avd deviceName -no-boot-anim" />
+				<arg value="${android.home}/tools/emulator -avd deviceName -no-boot-anim" />
 			</exec>
 
 			<sleep seconds="120" />
 
 			<execute>
-				adb push ${basedir.unix}/portal-web/test/functional/com/liferay/portalweb/dependencies/mobile/swipe_down.sh /data/local
-				adb push ${basedir.unix}/portal-web/test/functional/com/liferay/portalweb/dependencies/mobile/swipe_up.sh /data/local
-				adb push ${basedir.unix}/portal-web/test/functional/com/liferay/portalweb/dependencies/mobile/tap.sh /data/local
+				${android.home}/platform-tools/adb push ${basedir.unix}/portal-web/test/functional/com/liferay/portalweb/dependencies/mobile/swipe_down.sh /data/local
+				${android.home}/platform-tools/adb push ${basedir.unix}/portal-web/test/functional/com/liferay/portalweb/dependencies/mobile/swipe_up.sh /data/local
+				${android.home}/platform-tools/adb push ${basedir.unix}/portal-web/test/functional/com/liferay/portalweb/dependencies/mobile/tap.sh /data/local
 
-				adb -s emulator-5554 shell chmod 0777 /data/local/swipe_down.sh
-				adb -s emulator-5554 shell chmod 0777 /data/local/swipe_up.sh
-				adb -s emulator-5554 shell chmod 0777 /data/local/tap.sh
+				${android.home}/platform-tools/adb -s emulator-5554 shell chmod 0777 /data/local/swipe_down.sh
+				${android.home}/platform-tools/adb -s emulator-5554 shell chmod 0777 /data/local/swipe_up.sh
+				${android.home}/platform-tools/adb -s emulator-5554 shell chmod 0777 /data/local/tap.sh
 
-				adb -s emulator-5554 shell settings put system pointer_location 1
-				adb -s emulator-5554 shell settings put system show_touches 1
+				${android.home}/platform-tools/adb -s emulator-5554 shell settings put system pointer_location 1
+				${android.home}/platform-tools/adb -s emulator-5554 shell settings put system show_touches 1
 			</execute>
 		</sequential>
 	</macrodef>
 
 	<macrodef name="start-appium">
 		<sequential>
+			<fail message="Please set the property ${android.home}." unless="android.home" />
+
 			<parallel>
 				<daemons>
 					<exec executable="/bin/bash" os="${os.unix}">
+						<env key="PATH" value="${env.PATH}:${android.home}/tools:${android.home}/platform-tools" />
 						<arg value="-c" />
 						<arg value="${appium.unix.cmd}" />
 					</exec>
 
 					<exec dir="${appium.win32.dir}" executable="cmd.exe" os="${os.windows}">
+						<env key="Path" value="${env.Path}:${android.home}/tools:${android.home}/platform-tools" />
 						<arg value="/c" />
 						<arg value="${appium.win32.cmd}" />
 					</exec>
@@ -1398,9 +1404,11 @@
 
 	<macrodef name="stop-android-device">
 		<sequential>
+			<fail message="Please set the property ${android.home}." unless="android.home" />
+
 			<execute>
-				adb emu kill
-				android delete avd -n deviceName
+				${android.home}/platform-tools/adb emu kill
+				${android.home}/tools/android delete avd -n deviceName
 			</execute>
 		</sequential>
 	</macrodef>
@@ -3394,6 +3402,15 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 		<antcall target="prepare-selenium-testcase-properties" />
 
 		<if>
+			<isset property="android.home" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					android.home=${android.home}
+				</echo>
+			</then>
+		</if>
+
+		<if>
 			<isset property="ignore.errors.delimiter" />
 			<then>
 				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
@@ -3861,6 +3878,96 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 				</echo>
 			</then>
 		</if>
+
+		<if>
+			<isset property="marketplace.email.address.1" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.address.1=${marketplace.email.address.1}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.address.2" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.address.2=${marketplace.email.address.2}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.address.3" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.address.3=${marketplace.email.address.3}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.address.4" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.address.4=${marketplace.email.address.4}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.address.5" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.address.5=${marketplace.email.password.5}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.password.1" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.password.1=${marketplace.email.password.1}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.password.2" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.password.2=${marketplace.email.password.2}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.password.3" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.password.3=${marketplace.email.password.3}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.password.4" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.password.4=${marketplace.email.password.4}
+				</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="marketplace.email.password.5" />
+			<then>
+				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+					marketplace.email.password.5=${marketplace.email.password.5}
+				</echo>
+			</then>
+		</if>
 	</target>
 
 	<target name="prepare-selenium-required-properties">
@@ -4146,6 +4253,8 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 
 				<antcall target="prepare-portal-ext-properties" />
 
+				<antcall target="prepare-system-ext-properties" />
+
 				<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}">
 					<replacetoken><![CDATA[-Xmx1024m -XX:MaxPermSize=256m]]></replacetoken>
 					<replacevalue><![CDATA[-Xmx2048m -XX:MaxPermSize=512m]]></replacevalue>
@@ -4226,6 +4335,10 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 		<antcall target="record-test-class-file-names" inheritAll="false" />
 
 		<antcall target="record-test-plugin-names" inheritAll="false" />
+	</target>
+
+	<target name="prepare-system-ext-properties">
+		<echo file="${app.server.classes.portal.dir}/system-ext.properties">log.sanitizer.enabled=false</echo>
 	</target>
 
 	<target name="prepare-test-build-tomcat-dependents">
@@ -5148,7 +5261,7 @@ if (ppstate.equals("normal")) {
 		</if>
 	</target>
 
-	<target name="run-simple-server" depends="prepare-portal-properties,prepare-portal-ext-properties">
+	<target name="run-simple-server" depends="prepare-portal-properties,prepare-portal-ext-properties,prepare-system-ext-properties">
 		<if>
 			<equals arg1="${app.server.type}" arg2="tomcat" />
 			<then>

@@ -50,6 +50,26 @@ public class LoggerElement {
 
 	public LoggerElement(String id) {
 		_id = id;
+
+		if (_isWrittenToLogger()) {
+			String className = LoggerUtil.getClassName(this);
+
+			if (Validator.isNotNull(className)) {
+				_className = className;
+			}
+
+			String name = LoggerUtil.getName(this);
+
+			if (Validator.isNotNull(name)) {
+				_name = name;
+			}
+
+			String text = LoggerUtil.getText(this);
+
+			if (Validator.isNotNull(text)) {
+				_text = text;
+			}
+		}
 	}
 
 	public void addChildLoggerElement(LoggerElement childLoggerElement) {
@@ -57,6 +77,8 @@ public class LoggerElement {
 
 		if (_isWrittenToLogger()) {
 			LoggerUtil.addChildLoggerElement(this, childLoggerElement);
+
+			childLoggerElement.writeChildLoggerElements();
 		}
 	}
 
@@ -94,6 +116,10 @@ public class LoggerElement {
 
 	public void setName(String name) {
 		_name = name;
+
+		if (_isWrittenToLogger()) {
+			LoggerUtil.setName(this);
+		}
 	}
 
 	public void setText(String text) {
@@ -146,6 +172,16 @@ public class LoggerElement {
 		}
 
 		return sb.toString();
+	}
+
+	public void writeChildLoggerElements() {
+		if (_isWrittenToLogger()) {
+			for (LoggerElement childLoggerElement : _childLoggerElements) {
+				LoggerUtil.addChildLoggerElement(this, childLoggerElement);
+
+				childLoggerElement.writeChildLoggerElements();
+			}
+		}
 	}
 
 	private boolean _isWrittenToLogger() {
