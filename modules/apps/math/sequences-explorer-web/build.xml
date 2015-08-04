@@ -5,4 +5,12 @@
 	<import file="../../../../tools/sdk/build-common-osgi-plugin.xml" />
 
 	<property name="auto.deploy.dir" value="${liferay.home}/osgi/modules" />
+
+	<target name="compile">
+		<copy file="${basedir}/bower_components/dragula.js/dist/dragula.min.js" todir="${basedir}/.js-cache/META-INF/resources" />
+
+		<compile
+			module.dir="${basedir}"
+		/>
+	</target>
 </project>

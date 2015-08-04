@@ -1,6 +1,7 @@
 'use strict';
 
 import {fibonacci as FibonacciSeq, prime as PrimeSeq, square as SquareSeq, triangle as TriangleSeq} from 'js-numsequences/collection.es';
+import dragula from '../dragula.min';
 
 class SequencePrinter {
 	constructor(container, limit = 20) {
@@ -22,6 +23,8 @@ class SequencePrinter {
 		let tableBody = `<tbody>${this._getSequencesContent()}</tbody>`;
 
 		this.container.innerHTML = `<table class="table table-striped">${tableHead}${tableBody}</table>`;
+
+		dragula([this.container.querySelector('tbody')]);
 	}
 
 	_getSequencesContent() {
