@@ -19,8 +19,6 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-Layout exportableLayout = ExportImportHelperUtil.getExportableLayout(themeDisplay);
-
 long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
 
 Group group = GroupLocalServiceUtil.fetchGroup(groupId);
@@ -47,7 +45,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 	<aui:input name="tabs1" type="hidden" value="export_import" />
 	<aui:input name="tabs2" type="hidden" value="import" />
 	<aui:input name="redirect" type="hidden" value="<%= importPortletRenderURL %>" />
-	<aui:input name="plid" type="hidden" value="<%= exportableLayout.getPlid() %>" />
+	<aui:input name="plid" type="hidden" value="<%= plid %>" />
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 
@@ -220,7 +218,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 
 																if (ArrayUtil.isNotEmpty(childrenControls)) {
 																	request.setAttribute("render_controls.jsp-controls", childrenControls);
-																%>
+															%>
 
 																	<aui:field-wrapper label="content-metadata">
 																		<ul class="lfr-tree list-unstyled">
@@ -228,7 +226,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 																		</ul>
 																	</aui:field-wrapper>
 
-																<%
+															<%
 																}
 															}
 															%>

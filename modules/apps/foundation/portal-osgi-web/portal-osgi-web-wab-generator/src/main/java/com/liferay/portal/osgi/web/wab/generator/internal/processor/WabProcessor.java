@@ -23,6 +23,7 @@ import aQute.bnd.osgi.JarResource;
 import aQute.bnd.osgi.Resource;
 import aQute.bnd.version.Version;
 
+import com.liferay.petra.xml.util.XMLUtil;
 import com.liferay.portal.events.GlobalStartupAction;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployListener;
@@ -61,7 +62,6 @@ import com.liferay.portal.osgi.web.wab.generator.internal.introspection.ClassLoa
 import com.liferay.portal.osgi.web.wab.generator.internal.introspection.Source;
 import com.liferay.portal.osgi.web.wab.generator.internal.util.AntUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.util.xml.XMLUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1246,7 +1246,7 @@ public class WabProcessor {
 
 		processRequiredDeploymentContexts(analyzer);
 
-		processExcludedJSPs(analyzer);
+		_processExcludedJSPs(analyzer);
 
 		analyzer.setProperties(pluginPackageProperties);
 
@@ -1360,7 +1360,7 @@ public class WabProcessor {
 		}
 	}
 
-	private void processExcludedJSPs(Analyzer analyzer) throws IOException {
+	private void _processExcludedJSPs(Analyzer analyzer) throws IOException {
 		File file = new File(_pluginDir, "/WEB-INF/liferay-hook.xml");
 
 		if (!file.exists()) {

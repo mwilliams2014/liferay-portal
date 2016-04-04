@@ -164,9 +164,9 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 					String layoutPrototypeName = (String)missingLayoutPrototype.getObject(2);
 				%>
 
-				<li>
-					<%= ResourceActionsUtil.getModelResource(locale, layoutPrototypeClassName) %>: <strong><%= HtmlUtil.escape(layoutPrototypeName) %></strong> (<%= HtmlUtil.escape(layoutPrototypeUuid) %>)
-				</li>
+					<li>
+						<%= ResourceActionsUtil.getModelResource(locale, layoutPrototypeClassName) %>: <strong><%= HtmlUtil.escape(layoutPrototypeName) %></strong> (<%= HtmlUtil.escape(layoutPrototypeUuid) %>)
+					</li>
 
 				<%
 				}
@@ -311,11 +311,6 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 			rangeLastNode: '#rangeLast',
 			rangeLastPublishNode: '#rangeLastPublish',
 			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>',
-			remoteAddressNode: '#<portlet:namespace />remoteAddress',
-			remoteGroupIdNode: '#<portlet:namespace />remoteGroupId',
-			remotePathContextNode: '#<portlet:namespace />remotePathContext',
-			remotePortNode: '#<portlet:namespace />remotePort',
-			secureConnectionNode: '#secureConnection',
 			setupNode: '#<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>',
 			timeZone: '<%= timeZone.getID() %>',
 			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES_ALL %>'

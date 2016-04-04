@@ -305,24 +305,13 @@ public class StagingImpl implements Staging {
 
 		long plid = ParamUtil.getLong(portletRequest, "plid");
 
-		Layout targetLayout = _layoutLocalService.getLayout(plid);
-
-		Group stagingGroup = targetLayout.getGroup();
-
-		Group liveGroup = stagingGroup.getLiveGroup();
-
-		Layout sourceLayout = _layoutLocalService.getLayoutByUuidAndGroupId(
-			targetLayout.getUuid(), liveGroup.getGroupId(),
-			targetLayout.isPrivateLayout());
-
 		Map<String, String[]> parameterMap =
 			ExportImportConfigurationParameterMapFactory.buildParameterMap(
 				portletRequest);
 
 		return publishPortlet(
-			themeDisplay.getUserId(), liveGroup.getGroupId(),
-			stagingGroup.getGroupId(), sourceLayout.getPlid(),
-			targetLayout.getPlid(), portlet.getPortletId(), parameterMap);
+			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), plid,
+			portlet.getPortletId(), parameterMap, true);
 	}
 
 	/**
@@ -1678,45 +1667,18 @@ public class StagingImpl implements Staging {
 	public long publishToLive(PortletRequest portletRequest, Portlet portlet)
 		throws PortalException {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		long plid = ParamUtil.getLong(portletRequest, "plid");
 
-		Layout sourceLayout = _layoutLocalService.getLayout(plid);
+		Map<String, String[]> parameterMap =
+			ExportImportConfigurationParameterMapFactory.buildParameterMap(
+				portletRequest);
 
-		Group stagingGroup = null;
-		Group liveGroup = null;
-
-		Layout targetLayout = null;
-
-		long scopeGroupId = PortalUtil.getScopeGroupId(portletRequest);
-
-		if (sourceLayout.isTypeControlPanel()) {
-			stagingGroup = _groupLocalService.fetchGroup(scopeGroupId);
-			liveGroup = stagingGroup.getLiveGroup();
-
-			targetLayout = sourceLayout;
-		}
-		else if (sourceLayout.hasScopeGroup() &&
-				 (sourceLayout.getScopeGroup().getGroupId() == scopeGroupId)) {
-
-			stagingGroup = sourceLayout.getScopeGroup();
-			liveGroup = stagingGroup.getLiveGroup();
-
-			targetLayout = _layoutLocalService.getLayout(
-				liveGroup.getClassPK());
-		}
-		else {
-			stagingGroup = sourceLayout.getGroup();
-			liveGroup = stagingGroup.getLiveGroup();
-
-			targetLayout = _layoutLocalService.fetchLayoutByUuidAndGroupId(
-				sourceLayout.getUuid(), liveGroup.getGroupId(),
-				sourceLayout.isPrivateLayout());
-		}
-
-		return copyPortlet(
-			portletRequest, stagingGroup.getGroupId(), liveGroup.getGroupId(),
-			sourceLayout.getPlid(), targetLayout.getPlid(),
-			portlet.getPortletId());
+		return publishPortlet(
+			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), plid,
+			portlet.getPortletId(), parameterMap, false);
 	}
 
 	@Override
@@ -2602,8 +2564,8 @@ public class StagingImpl implements Staging {
 	}
 
 	protected boolean isCompanyGroup(HttpPrincipal httpPrincipal, Group group) {
-		ClassName className = ClassNameServiceHttp.fetchClassName(
-			httpPrincipal, String.valueOf(group.getClassNameId()));
+		ClassName className = ClassNameServiceHttp.fetchByClassNameId(
+			httpPrincipal, group.getClassNameId());
 
 		if (Validator.equals(
 				className.getClassName(), Company.class.getName())) {
@@ -2625,6 +2587,55 @@ public class StagingImpl implements Staging {
 		throws PortalException {
 
 		return 0;
+	}
+
+	protected long publishPortlet(
+			long userId, long scopeGroupId, long plid, String portletId,
+			Map<String, String[]> parameterMap, boolean copyFromLive)
+		throws PortalException {
+
+		Layout sourceLayout = _layoutLocalService.getLayout(plid);
+
+		Group stagingGroup = null;
+		Group liveGroup = null;
+
+		Layout targetLayout = null;
+
+		if (sourceLayout.isTypeControlPanel()) {
+			stagingGroup = _groupLocalService.fetchGroup(scopeGroupId);
+			liveGroup = stagingGroup.getLiveGroup();
+
+			targetLayout = sourceLayout;
+		}
+		else if (sourceLayout.hasScopeGroup() &&
+				 (sourceLayout.getScopeGroup().getGroupId() == scopeGroupId)) {
+
+			stagingGroup = sourceLayout.getScopeGroup();
+			liveGroup = stagingGroup.getLiveGroup();
+
+			targetLayout = _layoutLocalService.getLayout(
+				liveGroup.getClassPK());
+		}
+		else {
+			stagingGroup = sourceLayout.getGroup();
+			liveGroup = stagingGroup.getLiveGroup();
+
+			targetLayout = _layoutLocalService.fetchLayoutByUuidAndGroupId(
+				sourceLayout.getUuid(), liveGroup.getGroupId(),
+				sourceLayout.isPrivateLayout());
+		}
+
+		if (copyFromLive) {
+			return publishPortlet(
+				userId, liveGroup.getGroupId(), stagingGroup.getGroupId(),
+				targetLayout.getPlid(), sourceLayout.getPlid(), portletId,
+				parameterMap);
+		}
+
+		return publishPortlet(
+			userId, stagingGroup.getGroupId(), liveGroup.getGroupId(),
+			sourceLayout.getPlid(), targetLayout.getPlid(), portletId,
+			parameterMap);
 	}
 
 	/**
@@ -2907,7 +2918,9 @@ public class StagingImpl implements Staging {
 			Group remoteGroup = GroupServiceHttp.getGroup(
 				httpPrincipal, remoteGroupId);
 
-			if (group.equals(remoteGroup)) {
+			if (group.equals(remoteGroup) &&
+				Validator.equals(group.getUuid(), remoteGroup.getUuid())) {
+
 				RemoteExportException ree = new RemoteExportException(
 					RemoteExportException.SAME_GROUP);
 

@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.tools.ToolsUtil;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -113,6 +114,8 @@ public class JavaClass {
 
 			checkUnusedParameters(javaTerm);
 
+			_formatReturnStatements(javaTerm);
+
 			if (javaTerm.isMethod() || javaTerm.isConstructor()) {
 				checkChaining(javaTerm);
 				checkLineBreak(javaTerm);
@@ -132,7 +135,8 @@ public class JavaClass {
 					checkJavaFieldTypesExcludes, _absolutePath)) {
 
 				checkJavaFieldType(
-					javaTerm, annotationsExclusions, immutableFieldTypes);
+					javaTerms, javaTerm, annotationsExclusions,
+					immutableFieldTypes);
 			}
 
 			if (!originalContent.equals(_classContent)) {
@@ -422,15 +426,23 @@ public class JavaClass {
 	}
 
 	protected void checkJavaFieldType(
-			JavaTerm javaTerm, Set<String> annotationsExclusions,
-			Set<String> immutableFieldTypes)
+			Set<JavaTerm> javaTerms, JavaTerm javaTerm,
+			Set<String> annotationsExclusions, Set<String> immutableFieldTypes)
 		throws Exception {
 
-		if (!_javaSourceProcessor.portalSource || !javaTerm.isVariable()) {
+		if (!_javaSourceProcessor.portalSource ||
+			(!javaTerm.isVariable() && !javaTerm.isMethod())) {
+
 			return;
 		}
 
 		String javaTermName = javaTerm.getName();
+
+		if (javaTerm.isMethod() &&
+			_underscoreNotAllowedMethodNames.contains(javaTermName)) {
+
+			return;
+		}
 
 		Pattern pattern = Pattern.compile(
 			"\t(private |protected |public )" +
@@ -449,16 +461,32 @@ public class JavaClass {
 			(javaTermName.charAt(0) == CharPool.UNDERLINE)) {
 
 			if (javaTerm.isPrivate()) {
-				_classContent = _classContent.replaceAll(
-					"(?<=[\\W&&[^.\"]])(" + javaTermName + ")\\b",
-					StringPool.UNDERLINE.concat(javaTermName));
+				if (!javaTermContent.contains("@Reference")) {
+					if (getJavaTermCount(javaTerms, javaTermName) > 1) {
+						_javaSourceProcessor.processErrorMessage(
+							_fileName,
+							"Private method or variable should start with " +
+								"underscore: " + _fileName + " " +
+									javaTerm.getLineCount());
+					}
+					else {
+						_classContent = _classContent.replaceAll(
+							"(?<=[\\W&&[^.\"]])(" + javaTermName + ")\\b",
+							StringPool.UNDERLINE.concat(javaTermName));
+					}
+				}
 			}
 			else {
 				_javaSourceProcessor.processErrorMessage(
 					_fileName,
-					"Only private var should start with underscore: " +
-						_fileName + " " + javaTerm.getLineCount());
+					"Only private method or variable should start with " +
+						"underscore: " + _fileName + " " +
+							javaTerm.getLineCount());
 			}
+		}
+
+		if (!javaTerm.isVariable()) {
+			return;
 		}
 
 		String modifierDefinition = StringUtil.trim(
@@ -982,6 +1010,22 @@ public class JavaClass {
 		return javaTerm;
 	}
 
+	protected int getJavaTermCount(
+		Set<JavaTerm> javaTerms, String javaTermName) {
+
+		int count = 0;
+
+		for (JavaTerm javaTerm : javaTerms) {
+			String curJavaTermName = javaTerm.getName();
+
+			if (curJavaTermName.equals(javaTermName)) {
+				count += 1;
+			}
+		}
+
+		return count;
+	}
+
 	protected Set<JavaTerm> getJavaTerms() throws Exception {
 		if (_javaTerms != null) {
 			return _javaTerms;
@@ -1429,6 +1473,68 @@ public class JavaClass {
 		}
 	}
 
+	private void _formatReturnStatement(
+		String javaTermContent, Matcher matcher) {
+
+		String tabs = matcher.group(1);
+
+		StringBundler sb = new StringBundler(11);
+
+		sb.append(javaTermContent.substring(0, matcher.end(1)));
+		sb.append("if (");
+		sb.append(matcher.group(2));
+		sb.append(") {\n\n");
+		sb.append(tabs);
+		sb.append("\treturn true;\n");
+		sb.append(tabs);
+		sb.append("}\n\n");
+		sb.append(tabs);
+		sb.append("return false;\n");
+		sb.append(javaTermContent.substring(matcher.end()));
+
+		_classContent = _classContent.replace(javaTermContent, sb.toString());
+	}
+
+	private void _formatReturnStatements(JavaTerm javaTerm) {
+		String returnType = javaTerm.getReturnType();
+
+		if (!returnType.equals("boolean")) {
+			return;
+		}
+
+		String javaTermContent = javaTerm.getContent();
+
+		Matcher matcher1 = _returnPattern1.matcher(javaTermContent);
+
+		while (matcher1.find()) {
+			String returnStatement = matcher1.group();
+
+			if (returnStatement.contains("\t//") ||
+				returnStatement.contains(" {\n")) {
+
+				continue;
+			}
+
+			if (returnStatement.contains("|\n") ||
+				returnStatement.contains("&\n")) {
+
+				_formatReturnStatement(javaTermContent, matcher1);
+
+				return;
+			}
+
+			Matcher matcher2 = _returnPattern2.matcher(returnStatement);
+
+			if (matcher2.find() &&
+				!ToolsUtil.isInsideQuotes(returnStatement, matcher2.start(1))) {
+
+				_formatReturnStatement(javaTermContent, matcher1);
+
+				return;
+			}
+		}
+	}
+
 	private static final String _ACCESS_MODIFIER_PRIVATE = "private";
 
 	private static final String _ACCESS_MODIFIER_PROTECTED = "protected";
@@ -1441,6 +1547,9 @@ public class JavaClass {
 		_ACCESS_MODIFIER_PRIVATE, _ACCESS_MODIFIER_PROTECTED,
 		_ACCESS_MODIFIER_PUBLIC
 	};
+
+	private static final List<String> _underscoreNotAllowedMethodNames =
+		ListUtil.fromArray(new String[] {"readObject", "writeObject"});
 
 	private final String _absolutePath;
 	private final Pattern _camelCasePattern = Pattern.compile(
@@ -1470,5 +1579,9 @@ public class JavaClass {
 	private final String _name;
 	private final JavaClass _outerClass;
 	private String _packagePath;
+	private Pattern _returnPattern1 = Pattern.compile(
+		"\n(\t+)return (.*?);\n", Pattern.DOTALL);
+	private Pattern _returnPattern2 = Pattern.compile(
+		".* (==|!=|<|>|>=|<=)[ \n].*");
 
 }

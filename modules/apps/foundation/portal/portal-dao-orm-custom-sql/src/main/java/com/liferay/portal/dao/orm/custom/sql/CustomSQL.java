@@ -59,6 +59,7 @@ import org.osgi.framework.FrameworkUtil;
  * @author Brian Wing Shun Chan
  * @author Bruno Farache
  * @author Raymond Augé
+ * @see com.liferay.util.dao.orm.CustomSQL
  */
 public class CustomSQL {
 
@@ -123,7 +124,7 @@ public class CustomSQL {
 	}
 
 	public String get(Class<?> clazz, String id) {
-		BundleContext bundleContext = getBundleContext(clazz);
+		BundleContext bundleContext = _getBundleContext(clazz);
 
 		if (!_customSQLPool.isBundleContextLoaded(bundleContext)) {
 			_loadCustomSQL(clazz);
@@ -295,7 +296,7 @@ public class CustomSQL {
 		}
 
 		if (_CUSTOM_SQL_AUTO_ESCAPE_WILDCARDS_ENABLED) {
-			keywords = escapeWildCards(keywords);
+			keywords = _escapeWildCards(keywords);
 		}
 
 		if (lowerCase) {
@@ -858,24 +859,7 @@ public class CustomSQL {
 		return sb.toString();
 	}
 
-	private void _loadCustomSQL(Class<?> clazz) {
-		try {
-			ClassLoader classLoader = clazz.getClassLoader();
-
-			BundleContext bundleContext = getBundleContext(clazz);
-
-			String[] configs = getConfigs();
-
-			for (String config : configs) {
-				read(bundleContext, classLoader, config);
-			}
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
-	}
-
-	private String escapeWildCards(String keywords) {
+	private String _escapeWildCards(String keywords) {
 		if (!isVendorMySQL() && !isVendorOracle()) {
 			return keywords;
 		}
@@ -903,10 +887,27 @@ public class CustomSQL {
 		return sb.toString();
 	}
 
-	private BundleContext getBundleContext(Class<?> clazz) {
+	private BundleContext _getBundleContext(Class<?> clazz) {
 		Bundle bundle = FrameworkUtil.getBundle(clazz);
 
 		return bundle.getBundleContext();
+	}
+
+	private void _loadCustomSQL(Class<?> clazz) {
+		try {
+			ClassLoader classLoader = clazz.getClassLoader();
+
+			BundleContext bundleContext = _getBundleContext(clazz);
+
+			String[] configs = getConfigs();
+
+			for (String config : configs) {
+				read(bundleContext, classLoader, config);
+			}
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
 	}
 
 	private static final boolean _CUSTOM_SQL_AUTO_ESCAPE_WILDCARDS_ENABLED =
