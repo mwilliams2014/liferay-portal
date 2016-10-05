@@ -617,6 +617,7 @@
 			maxmemory="2048m"
 			noqualifier="java.*"
 			overview="${module.dir}/src/overview.html"
+			stylesheetfile="${project.dir}/tools/styles/javadoc.css"
 			useexternalfile="yes"
 			use="yes"
 			windowtitle="Liferay ${lp.version} ${module.dir} API"
@@ -629,6 +630,13 @@
 
 			<tag description="{$generated.description}" name="generated" />
 		</javadoc>
+
+		<copy todir="${doc.dir}/javadocs/images">
+			<fileset
+				dir="${project.dir}/tools/styles/images"
+			/>
+		</copy>
+
 	</target>
 
 	<target name="javadoc-portal-cmd">
@@ -646,6 +654,7 @@
 			maxmemory="2048m"
 			noqualifier="java.*"
 			overview="${module.dir}/src/overview.html"
+			stylesheetfile="${project.dir}/tools/styles/javadoc.css"
 			useexternalfile="yes"
 			use="yes"
 			windowtitle="Liferay ${lp.version} ${module.dir} API"
@@ -662,6 +671,13 @@
 
 			<tag description="{$generated.description}" name="generated" />
 		</javadoc>
+
+		<copy todir="${doc.dir}/javadocs/images">
+			<fileset
+				dir="${project.dir}/tools/styles/images"
+			/>
+		</copy>
+
 	</target>
 
 	<target name="prepare-generated-files">
