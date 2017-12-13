@@ -45,9 +45,9 @@ class ToggleDisableInputs extends Component {
 ToggleDisableInputs.STATE = {
 	/**
 	 * Switch state
+	 * @instance
 	 * @type {Boolean}
-	 * @memberof! ToggleDisableInputs#
-	 * @instance ToggleDisableInputs.STATE.checked
+	 * @memberof ToggleDisableInputs#
 	 */
 	checked: {
 		validator: core.isBoolean,
@@ -56,9 +56,9 @@ ToggleDisableInputs.STATE = {
 
 	/**
 	 * Flag to specify the logic for disabling inputs based on switch state
+	 * @instance
 	 * @type {Boolean}
-	 * @memberof! ToggleDisableInputs#
-	 * @instance ToggleDisableInputs.STATE.disableOnChecked
+	 * @memberof ToggleDisableInputs#
 	 */
 	disableOnChecked: {
 		validator: core.isBoolean,
@@ -67,9 +67,9 @@ ToggleDisableInputs.STATE = {
 
 	/**
 	 * CSS Selector for the inputs to enable/disable
+	 * @instance
 	 * @type {String}
-	 * @memberof! ToggleDisableInputs#
-	 * @instance ToggleDisableInputs.STATE.inputSelector
+	 * @memberof ToggleDisableInputs#
 	 */
 	inputSelector: {
 		validator: core.isString
@@ -77,9 +77,9 @@ ToggleDisableInputs.STATE = {
 
 	/**
 	 * Label of the switch
+	 * @instance
 	 * @type {String}
-	 * @memberof! ToggleDisableInputs#
-	 * @instance ToggleDisableInputs.STATE.label
+	 * @memberof ToggleDisableInputs#
 	 */
 	label: {
 		validator: core.isString
