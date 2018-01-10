@@ -14,13 +14,10 @@
 
 package com.liferay.apio.architect.sample.liferay.portal.internal.resource;
 
-import com.liferay.apio.architect.identifier.LongIdentifier;
 import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.pagination.Pagination;
-import com.liferay.apio.architect.representor.Representable;
 import com.liferay.apio.architect.representor.Representor;
-import com.liferay.apio.architect.router.ItemRouter;
-import com.liferay.apio.architect.router.NestedCollectionRouter;
+import com.liferay.apio.architect.resource.NestedCollectionResource;
 import com.liferay.apio.architect.routes.ItemRoutes;
 import com.liferay.apio.architect.routes.NestedCollectionRoutes;
 import com.liferay.blogs.kernel.exception.NoSuchEntryException;
@@ -53,19 +50,13 @@ import org.osgi.service.component.annotations.Reference;
  *
  * @author Javier Gamarra
  */
-@Component(
-	immediate = true,
-	service =
-		{ItemRouter.class, NestedCollectionRouter.class, Representable.class}
-)
+@Component(immediate = true)
 public class MediaObjectNestedCollectionResource
-	implements ItemRouter<DLFileEntry, LongIdentifier>,
-			   NestedCollectionRouter<DLFileEntry, DLFolder, LongIdentifier>,
-			   Representable<DLFileEntry, LongIdentifier> {
+	implements NestedCollectionResource <DLFileEntry, Long, DLFolder, Long> {
 
 	@Override
 	public NestedCollectionRoutes<DLFileEntry> collectionRoutes(
-		NestedCollectionRoutes.Builder<DLFileEntry, LongIdentifier> builder) {
+		NestedCollectionRoutes.Builder<DLFileEntry, Long> builder) {
 
 		return builder.addGetter(
 			this::_getPageItems
@@ -79,7 +70,7 @@ public class MediaObjectNestedCollectionResource
 
 	@Override
 	public ItemRoutes<DLFileEntry> itemRoutes(
-		ItemRoutes.Builder<DLFileEntry, LongIdentifier> builder) {
+		ItemRoutes.Builder<DLFileEntry, Long> builder) {
 
 		return builder.addGetter(
 			this::_getDLFileEntry
@@ -89,17 +80,16 @@ public class MediaObjectNestedCollectionResource
 	}
 
 	@Override
-	public Representor<DLFileEntry, LongIdentifier> representor(
-		Representor.Builder<DLFileEntry, LongIdentifier> builder) {
+	public Representor<DLFileEntry, Long> representor(
+		Representor.Builder<DLFileEntry, Long> builder) {
 
 		return builder.types(
 			"MediaObject"
 		).identifier(
-			dlFileEntry -> dlFileEntry::getFileEntryId
+			DLFileEntry::getFileEntryId
 		).addBidirectionalModel(
 			"folder", "mediaObjects", DLFolder.class,
-			this::_getDLFolderOptional,
-			dlFolder -> (LongIdentifier)dlFolder::getFolderId
+			this::_getDLFolderOptional, DLFolder::getFolderId
 		).addBinary(
 			"contentStream", this::_getInputStream
 		).addDate(
@@ -123,26 +113,22 @@ public class MediaObjectNestedCollectionResource
 		).build();
 	}
 
-	private void _deleteDLFileEntry(LongIdentifier dlFileEntryLongIdentifier) {
+	private void _deleteDLFileEntry(Long dlFileEntryId) {
 		try {
-			_dlFileEntryService.deleteFileEntry(
-				dlFileEntryLongIdentifier.getId());
+			_dlFileEntryService.deleteFileEntry(dlFileEntryId);
 		}
 		catch (PortalException pe) {
 			throw new ServerErrorException(500, pe);
 		}
 	}
 
-	private DLFileEntry _getDLFileEntry(
-		LongIdentifier dlFileEntryLongIdentifier) {
-
+	private DLFileEntry _getDLFileEntry(Long dlFileEntryId) {
 		try {
-			return _dlFileEntryService.getFileEntry(
-				dlFileEntryLongIdentifier.getId());
+			return _dlFileEntryService.getFileEntry(dlFileEntryId);
 		}
 		catch (NoSuchEntryException | PrincipalException e) {
 			throw new NotFoundException(
-				"Unable to get file " + dlFileEntryLongIdentifier.getId(), e);
+				"Unable to get file " + dlFileEntryId, e);
 		}
 		catch (PortalException pe) {
 			throw new ServerErrorException(500, pe);
@@ -173,11 +159,10 @@ public class MediaObjectNestedCollectionResource
 	}
 
 	private PageItems<DLFileEntry> _getPageItems(
-		Pagination pagination, LongIdentifier dlFolderLongIdentifier) {
+		Pagination pagination, Long dlFolderId) {
 
 		try {
-			DLFolder dlFolder = _dlFolderService.getFolder(
-				dlFolderLongIdentifier.getId());
+			DLFolder dlFolder = _dlFolderService.getFolder(dlFolderId);
 
 			List<DLFileEntry> dlFileEntries =
 				_dlFileEntryService.getFileEntries(

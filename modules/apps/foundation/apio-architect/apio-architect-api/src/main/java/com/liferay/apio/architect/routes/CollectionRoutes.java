@@ -14,10 +14,13 @@
 
 package com.liferay.apio.architect.routes;
 
-import com.liferay.apio.architect.alias.RequestFunction;
+import static com.liferay.apio.architect.routes.RoutesBuilderUtil.provide;
+
+import com.liferay.apio.architect.alias.ProvideFunction;
+import com.liferay.apio.architect.alias.form.FormBuilderFunction;
 import com.liferay.apio.architect.alias.routes.CreateItemFunction;
 import com.liferay.apio.architect.alias.routes.GetPageFunction;
-import com.liferay.apio.architect.error.ApioDeveloperError;
+import com.liferay.apio.architect.form.Form;
 import com.liferay.apio.architect.function.PentaFunction;
 import com.liferay.apio.architect.function.TetraFunction;
 import com.liferay.apio.architect.function.TriFunction;
@@ -26,12 +29,10 @@ import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.pagination.Pagination;
 import com.liferay.apio.architect.single.model.SingleModel;
 
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Holds information about the routes supported for a {@link
@@ -44,12 +45,15 @@ import javax.servlet.http.HttpServletRequest;
  * </p>
  *
  * @author Alejandro Hernández
+ * @param  <T> the model's type
  * @see    Builder
+ * @review
  */
 public class CollectionRoutes<T> {
 
 	public CollectionRoutes(Builder<T> builder) {
 		_createItemFunction = builder._createItemFunction;
+		_form = builder._form;
 		_getPageFunction = builder._getPageFunction;
 	}
 
@@ -63,6 +67,18 @@ public class CollectionRoutes<T> {
 	 */
 	public Optional<CreateItemFunction<T>> getCreateItemFunctionOptional() {
 		return Optional.ofNullable(_createItemFunction);
+	}
+
+	/**
+	 * Returns the form that is used to create a collection item, if it was
+	 * added through the {@link Builder}. Returns {@code Optional#empty()}
+	 * otherwise.
+	 *
+	 * @return the form used to create a collection item; {@code
+	 *         Optional#empty()} otherwise
+	 */
+	public Optional<Form> getForm() {
+		return Optional.ofNullable(_form);
 	}
 
 	/**
@@ -85,12 +101,11 @@ public class CollectionRoutes<T> {
 	public static class Builder<T> {
 
 		public Builder(
-			Class<T> modelClass,
-			RequestFunction<Function<Class<?>, Optional<?>>>
-				provideClassFunction) {
+			Class<T> modelClass, String name, ProvideFunction provideFunction) {
 
 			_modelClass = modelClass;
-			_provideClassFunction = provideClassFunction;
+			_name = name;
+			_provideFunction = provideFunction;
 		}
 
 		/**
@@ -99,20 +114,26 @@ public class CollectionRoutes<T> {
 		 * @param  biFunction the creator function that adds the collection item
 		 * @param  aClass the class of the collection item creator function's
 		 *         second parameter
+		 * @param  formBuilderFunction the function that creates the form for
+		 *         this operation
 		 * @return the updated builder
+		 * @review
 		 */
-		public <A> Builder<T> addCreator(
-			BiFunction<Map<String, Object>, A, T> biFunction, Class<A> aClass) {
+		@SuppressWarnings("unchecked")
+		public <A, R> Builder<T> addCreator(
+			BiFunction<R, A, T> biFunction, Class<A> aClass,
+			FormBuilderFunction<R> formBuilderFunction) {
 
-			_createItemFunction = httpServletRequest -> body -> {
-				A a = _provideClass(httpServletRequest, aClass);
+			_form = formBuilderFunction.apply(
+				new Form.Builder<>(Arrays.asList("c", _name)));
 
-				return biFunction.andThen(
+			_createItemFunction = httpServletRequest -> body -> provide(
+				_provideFunction, httpServletRequest, aClass,
+				a -> biFunction.andThen(
 					t -> new SingleModel<>(t, _modelClass)
 				).apply(
-					body, a
-				);
-			};
+					(R)_form.get(body), a
+				));
 
 			return this;
 		}
@@ -121,16 +142,24 @@ public class CollectionRoutes<T> {
 		 * Adds a route to a creator function with none extra parameters.
 		 *
 		 * @param  function the creator function that adds the collection item
+		 * @param  formBuilderFunction the function that creates the form for
+		 *         this operation
 		 * @return the updated builder
+		 * @review
 		 */
-		public Builder<T> addCreator(
-			Function<Map<String, Object>, T> function) {
+		@SuppressWarnings("unchecked")
+		public <R> Builder<T> addCreator(
+			Function<R, T> function,
+			FormBuilderFunction<R> formBuilderFunction) {
+
+			_form = formBuilderFunction.apply(
+				new Form.Builder<>(Arrays.asList("c", _name)));
 
 			_createItemFunction = httpServletRequest -> body ->
 				function.andThen(
 					t -> new SingleModel<>(t, _modelClass)
 				).apply(
-					body
+					(R)_form.get(body)
 				);
 
 			return this;
@@ -149,25 +178,28 @@ public class CollectionRoutes<T> {
 		 *         fourth parameter
 		 * @param  dClass the class of the collection item creator function's
 		 *         fifth parameter
+		 * @param  formBuilderFunction the function that creates the form for
+		 *         this operation
 		 * @return the updated builder
+		 * @review
 		 */
-		public <A, B, C, D> Builder<T> addCreator(
-			PentaFunction<Map<String, Object>, A, B, C, D, T> pentaFunction,
-			Class<A> aClass, Class<B> bClass, Class<C> cClass,
-			Class<D> dClass) {
+		@SuppressWarnings("unchecked")
+		public <A, B, C, D, R> Builder<T> addCreator(
+			PentaFunction<R, A, B, C, D, T> pentaFunction, Class<A> aClass,
+			Class<B> bClass, Class<C> cClass, Class<D> dClass,
+			FormBuilderFunction<R> formBuilderFunction) {
 
-			_createItemFunction = httpServletRequest -> body -> {
-				A a = _provideClass(httpServletRequest, aClass);
-				B b = _provideClass(httpServletRequest, bClass);
-				C c = _provideClass(httpServletRequest, cClass);
-				D d = _provideClass(httpServletRequest, dClass);
+			_form = formBuilderFunction.apply(
+				new Form.Builder<>(Arrays.asList("c", _name)));
 
-				return pentaFunction.andThen(
+			_createItemFunction = httpServletRequest -> body -> provide(
+				_provideFunction, httpServletRequest, aClass, bClass, cClass,
+				dClass,
+				a -> b -> c -> d -> pentaFunction.andThen(
 					t -> new SingleModel<>(t, _modelClass)
 				).apply(
-					body, a, b, c, d
-				);
-			};
+					(R)_form.get(body), a, b, c, d
+				));
 
 			return this;
 		}
@@ -183,23 +215,27 @@ public class CollectionRoutes<T> {
 		 *         third parameter
 		 * @param  cClass the class of the collection item creator function's
 		 *         fourth parameter
+		 * @param  formBuilderFunction the function that creates the form for
+		 *         this operation
 		 * @return the updated builder
+		 * @review
 		 */
-		public <A, B, C> Builder<T> addCreator(
-			TetraFunction<Map<String, Object>, A, B, C, T> pentaFunction,
-			Class<A> aClass, Class<B> bClass, Class<C> cClass) {
+		@SuppressWarnings("unchecked")
+		public <A, B, C, R> Builder<T> addCreator(
+			TetraFunction<R, A, B, C, T> pentaFunction, Class<A> aClass,
+			Class<B> bClass, Class<C> cClass,
+			FormBuilderFunction<R> formBuilderFunction) {
 
-			_createItemFunction = httpServletRequest -> body -> {
-				A a = _provideClass(httpServletRequest, aClass);
-				B b = _provideClass(httpServletRequest, bClass);
-				C c = _provideClass(httpServletRequest, cClass);
+			_form = formBuilderFunction.apply(
+				new Form.Builder<>(Arrays.asList("c", _name)));
 
-				return pentaFunction.andThen(
+			_createItemFunction = httpServletRequest -> body -> provide(
+				_provideFunction, httpServletRequest, aClass, bClass, cClass,
+				a -> b -> c -> pentaFunction.andThen(
 					t -> new SingleModel<>(t, _modelClass)
 				).apply(
-					body, a, b, c
-				);
-			};
+					(R)_form.get(body), a, b, c
+				));
 
 			return this;
 		}
@@ -213,22 +249,26 @@ public class CollectionRoutes<T> {
 		 *         second parameter
 		 * @param  bClass the class of the collection item creator function's
 		 *         third parameter
+		 * @param  formBuilderFunction the function that creates the form for
+		 *         this operation
 		 * @return the updated builder
+		 * @review
 		 */
-		public <A, B> Builder<T> addCreator(
-			TriFunction<Map<String, Object>, A, B, T> triFunction,
-			Class<A> aClass, Class<B> bClass) {
+		@SuppressWarnings("unchecked")
+		public <A, B, R> Builder<T> addCreator(
+			TriFunction<R, A, B, T> triFunction, Class<A> aClass,
+			Class<B> bClass, FormBuilderFunction<R> formBuilderFunction) {
 
-			_createItemFunction = httpServletRequest -> body -> {
-				A a = _provideClass(httpServletRequest, aClass);
-				B b = _provideClass(httpServletRequest, bClass);
+			_form = formBuilderFunction.apply(
+				new Form.Builder<>(Arrays.asList("c", _name)));
 
-				return triFunction.andThen(
+			_createItemFunction = httpServletRequest -> body -> provide(
+				_provideFunction, httpServletRequest, aClass, bClass,
+				a -> b -> triFunction.andThen(
 					t -> new SingleModel<>(t, _modelClass)
 				).apply(
-					body, a, b
-				);
-			};
+					(R)_form.get(body), a, b
+				));
 
 			return this;
 		}
@@ -244,17 +284,13 @@ public class CollectionRoutes<T> {
 			BiFunction<Pagination, A, PageItems<T>> biFunction,
 			Class<A> aClass) {
 
-			_getPageFunction = httpServletRequest -> path -> {
-				Pagination pagination = _provideClass(
-					httpServletRequest, Pagination.class);
-				A a = _provideClass(httpServletRequest, aClass);
-
-				return biFunction.andThen(
-					items -> new Page<>(_modelClass, items, pagination, path)
+			_getPageFunction = httpServletRequest -> provide(
+				_provideFunction, httpServletRequest, Pagination.class, aClass,
+				pagination -> a -> biFunction.andThen(
+					items -> new Page<>(_modelClass, items, pagination)
 				).apply(
 					pagination, a
-				);
-			};
+				));
 
 			return this;
 		}
@@ -269,16 +305,13 @@ public class CollectionRoutes<T> {
 		public Builder<T> addGetter(
 			Function<Pagination, PageItems<T>> function) {
 
-			_getPageFunction = httpServletRequest -> path -> {
-				Pagination pagination = _provideClass(
-					httpServletRequest, Pagination.class);
-
-				return function.andThen(
-					items -> new Page<>(_modelClass, items, pagination, path)
+			_getPageFunction = httpServletRequest -> provide(
+				_provideFunction, httpServletRequest, Pagination.class,
+				pagination -> function.andThen(
+					items -> new Page<>(_modelClass, items, pagination)
 				).apply(
 					pagination
-				);
-			};
+				));
 
 			return this;
 		}
@@ -299,20 +332,14 @@ public class CollectionRoutes<T> {
 			Class<A> aClass, Class<B> bClass, Class<C> cClass,
 			Class<D> dClass) {
 
-			_getPageFunction = httpServletRequest -> path -> {
-				Pagination pagination = _provideClass(
-					httpServletRequest, Pagination.class);
-				A a = _provideClass(httpServletRequest, aClass);
-				B b = _provideClass(httpServletRequest, bClass);
-				C c = _provideClass(httpServletRequest, cClass);
-				D d = _provideClass(httpServletRequest, dClass);
-
-				return pentaFunction.andThen(
-					items -> new Page<>(_modelClass, items, pagination, path)
+			_getPageFunction = httpServletRequest -> provide(
+				_provideFunction, httpServletRequest, Pagination.class, aClass,
+				bClass, cClass, dClass,
+				pagination -> a -> b -> c -> d -> pentaFunction.andThen(
+					items -> new Page<>(_modelClass, items, pagination)
 				).apply(
 					pagination, a, b, c, d
-				);
-			};
+				));
 
 			return this;
 		}
@@ -331,20 +358,14 @@ public class CollectionRoutes<T> {
 			TetraFunction<Pagination, A, B, C, PageItems<T>> tetraFunction,
 			Class<A> aClass, Class<B> bClass, Class<C> cClass) {
 
-			_getPageFunction = httpServletRequest -> path -> {
-				Pagination pagination = _provideClass(
-					httpServletRequest, Pagination.class);
-
-				A a = _provideClass(httpServletRequest, aClass);
-				B b = _provideClass(httpServletRequest, bClass);
-				C c = _provideClass(httpServletRequest, cClass);
-
-				return tetraFunction.andThen(
-					items -> new Page<>(_modelClass, items, pagination, path)
+			_getPageFunction = httpServletRequest -> provide(
+				_provideFunction, httpServletRequest, Pagination.class, aClass,
+				bClass, cClass,
+				pagination -> a -> b -> c -> tetraFunction.andThen(
+					items -> new Page<>(_modelClass, items, pagination)
 				).apply(
 					pagination, a, b, c
-				);
-			};
+				));
 
 			return this;
 		}
@@ -361,19 +382,14 @@ public class CollectionRoutes<T> {
 			TriFunction<Pagination, A, B, PageItems<T>> triFunction,
 			Class<A> aClass, Class<B> bClass) {
 
-			_getPageFunction = httpServletRequest -> path -> {
-				Pagination pagination = _provideClass(
-					httpServletRequest, Pagination.class);
-
-				A a = _provideClass(httpServletRequest, aClass);
-				B b = _provideClass(httpServletRequest, bClass);
-
-				return triFunction.andThen(
-					items -> new Page<>(_modelClass, items, pagination, path)
+			_getPageFunction = httpServletRequest -> provide(
+				_provideFunction, httpServletRequest, Pagination.class, aClass,
+				bClass,
+				pagination -> a -> b -> triFunction.andThen(
+					items -> new Page<>(_modelClass, items, pagination)
 				).apply(
 					pagination, a, b
-				);
-			};
+				));
 
 			return this;
 		}
@@ -388,32 +404,17 @@ public class CollectionRoutes<T> {
 			return new CollectionRoutes<>(this);
 		}
 
-		@SuppressWarnings("unchecked")
-		private <V> V _provideClass(
-			HttpServletRequest httpServletRequest, Class<V> clazz) {
-
-			Optional<?> optional = _provideClassFunction.apply(
-				httpServletRequest
-			).apply(
-				clazz
-			);
-
-			return optional.map(
-				provided -> (V)provided
-			).orElseThrow(
-				() -> new ApioDeveloperError.MustHaveProvider(clazz)
-			);
-		}
-
 		private CreateItemFunction<T> _createItemFunction;
+		private Form _form;
 		private GetPageFunction<T> _getPageFunction;
 		private final Class<T> _modelClass;
-		private final RequestFunction<Function<Class<?>, Optional<?>>>
-			_provideClassFunction;
+		private final String _name;
+		private final ProvideFunction _provideFunction;
 
 	}
 
 	private CreateItemFunction<T> _createItemFunction;
+	private final Form _form;
 	private GetPageFunction<T> _getPageFunction;
 
 }

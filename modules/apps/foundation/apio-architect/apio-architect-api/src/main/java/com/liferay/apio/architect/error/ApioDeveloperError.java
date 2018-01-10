@@ -53,6 +53,20 @@ public class ApioDeveloperError extends Error {
 	}
 
 	/**
+	 * Represents the error the developer should throw when a form message
+	 * mapper is missing.
+	 */
+	public static class MustHaveFormMessageMapper extends ApioDeveloperError {
+
+		public MustHaveFormMessageMapper(String mediaType) {
+			super(
+				"Form media type " + mediaType +
+					" does not have a message mapper");
+		}
+
+	}
+
+	/**
 	 * Represents the error the developer should throw when a message mapper is
 	 * missing.
 	 */
@@ -74,7 +88,7 @@ public class ApioDeveloperError extends Error {
 		extends ApioDeveloperError {
 
 		public MustHavePathIdentifierMapper(Class<?> identifier) {
-			super("Identifier " + identifier + " does not have a path mapper");
+			super(identifier + " identifier does not have a path mapper");
 		}
 
 	}
@@ -132,7 +146,7 @@ public class ApioDeveloperError extends Error {
 			Class<?> identifierClass, Class<?> collectionIdentifierClass) {
 
 			super(
-				"Identifier " + identifierClass + " must be " +
+				identifierClass + " identifier must be " +
 					collectionIdentifierClass);
 		}
 

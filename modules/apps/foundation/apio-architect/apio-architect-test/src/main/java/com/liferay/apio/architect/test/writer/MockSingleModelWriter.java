@@ -14,30 +14,18 @@
 
 package com.liferay.apio.architect.test.writer;
 
-import static com.liferay.apio.architect.test.resource.MockRepresentorCreator.createFirstEmbeddedModelRepresentor;
-import static com.liferay.apio.architect.test.resource.MockRepresentorCreator.createRootModelRepresentor;
-import static com.liferay.apio.architect.test.resource.MockRepresentorCreator.createSecondEmbeddedModelRepresentor;
-import static com.liferay.apio.architect.test.resource.MockRepresentorCreator.createThirdEmbeddedModelRepresentor;
+import static com.liferay.apio.architect.test.writer.MockWriterUtil.getRequestInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import com.liferay.apio.architect.identifier.Identifier;
-import com.liferay.apio.architect.identifier.StringIdentifier;
 import com.liferay.apio.architect.message.json.SingleModelMessageMapper;
-import com.liferay.apio.architect.representor.Representor;
 import com.liferay.apio.architect.request.RequestInfo;
 import com.liferay.apio.architect.single.model.SingleModel;
-import com.liferay.apio.architect.test.resource.model.FirstEmbeddedModel;
-import com.liferay.apio.architect.test.resource.model.RootModel;
-import com.liferay.apio.architect.test.resource.model.SecondEmbeddedModel;
-import com.liferay.apio.architect.uri.Path;
+import com.liferay.apio.architect.test.model.RootModel;
 import com.liferay.apio.architect.writer.SingleModelWriter;
 
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Function;
 
 import javax.ws.rs.core.HttpHeaders;
 
@@ -51,93 +39,6 @@ import javax.ws.rs.core.HttpHeaders;
  * @author Alejandro Hernández
  */
 public class MockSingleModelWriter {
-
-	/**
-	 * Returns a model class's {@link Representor}.
-	 *
-	 * @param  modelClass the model class
-	 * @return the model class's {@code Representor}
-	 */
-	public static <T> Optional<Representor<?, ? extends Identifier>>
-		getRepresentorOptional(Class<T> modelClass) {
-
-		if (modelClass == RootModel.class) {
-			return Optional.of(createRootModelRepresentor(false));
-		}
-
-		if (modelClass == FirstEmbeddedModel.class) {
-			return Optional.of(createFirstEmbeddedModelRepresentor());
-		}
-
-		if (modelClass == SecondEmbeddedModel.class) {
-			return Optional.of(createSecondEmbeddedModelRepresentor());
-		}
-
-		return Optional.of(createThirdEmbeddedModelRepresentor());
-	}
-
-	/**
-	 * Returns a {@link RequestInfo} with the provided {@code HttpHeaders}, a
-	 * mock {@link com.liferay.apio.architect.url.ServerURL}, a mock {@link
-	 * com.liferay.apio.architect.response.control.Embedded} request, and a mock
-	 * {@link com.liferay.apio.architect.language.Language} with {@code
-	 * java.util.LocaleLocale#US}.
-	 *
-	 * @param  httpHeaders the {@code HttpHeaders}
-	 * @return the {@code RequestInfo}
-	 */
-	public static RequestInfo getRequestInfo(HttpHeaders httpHeaders) {
-		return RequestInfo.create(
-			builder -> builder.httpHeaders(
-				httpHeaders
-			).httpServletRequest(
-				null
-			).serverURL(
-				() -> "localhost"
-			).embedded(
-				() -> Arrays.asList("embedded1", "embedded1.embedded")::contains
-			).language(
-				() -> Locale.US
-			).build());
-	}
-
-	/**
-	 * Returns a mock {@link Path} from an {@link Identifier}. The {@code
-	 * Identifier} must be a {@link StringIdentifier}, otherwise {@code
-	 * Optional#empty()} is returned.
-	 *
-	 * @param  identifier the {@code Identifier}
-	 * @param  modelClass the model class
-	 * @return the mock {@code Path} from the {@code Identifier}, if the {@code
-	 *         Identifier} is a {@code StringIdentifier}; {@code
-	 *         Optional#empty()} otherwise
-	 */
-	public static Optional<Path> identifierToPath(
-		Identifier identifier, Class<?> modelClass) {
-
-		if (!(identifier instanceof StringIdentifier)) {
-			return Optional.empty();
-		}
-
-		StringIdentifier stringIdentifier = (StringIdentifier)identifier;
-
-		Function<String, Optional<Path>> function =
-			name -> Optional.of(new Path(name, stringIdentifier.getId()));
-
-		if (modelClass == RootModel.class) {
-			return function.apply("model");
-		}
-
-		if (modelClass == FirstEmbeddedModel.class) {
-			return function.apply("first-inner-model");
-		}
-
-		if (modelClass == SecondEmbeddedModel.class) {
-			return function.apply("second-inner-model");
-		}
-
-		return function.apply("third-inner-model");
-	}
 
 	/**
 	 * Writes a {@link RootModel}, with the hierarchy of embedded models and
@@ -163,12 +64,11 @@ public class MockSingleModelWriter {
 				).modelMessageMapper(
 					singleModelMessageMapper
 				).pathFunction(
-					(identifier, identifierClass, clazz) ->
-						identifierToPath(identifier, clazz)
+					MockWriterUtil::identifierToPath
 				).resourceNameFunction(
 					__ -> Optional.of("models")
 				).representorFunction(
-					MockSingleModelWriter::getRepresentorOptional
+					MockWriterUtil::getRepresentorOptional
 				).requestInfo(
 					requestInfo
 				).build());

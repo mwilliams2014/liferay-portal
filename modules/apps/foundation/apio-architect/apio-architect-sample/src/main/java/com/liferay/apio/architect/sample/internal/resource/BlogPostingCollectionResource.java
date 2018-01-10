@@ -14,21 +14,18 @@
 
 package com.liferay.apio.architect.sample.internal.resource;
 
-import com.liferay.apio.architect.identifier.LongIdentifier;
 import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.pagination.Pagination;
-import com.liferay.apio.architect.representor.Representable;
 import com.liferay.apio.architect.representor.Representor;
-import com.liferay.apio.architect.router.CollectionRouter;
-import com.liferay.apio.architect.router.ItemRouter;
+import com.liferay.apio.architect.resource.CollectionResource;
 import com.liferay.apio.architect.routes.CollectionRoutes;
 import com.liferay.apio.architect.routes.ItemRoutes;
+import com.liferay.apio.architect.sample.internal.form.BlogPostingForm;
 import com.liferay.apio.architect.sample.internal.model.BlogPosting;
 import com.liferay.apio.architect.sample.internal.model.BlogPostingComment;
 import com.liferay.apio.architect.sample.internal.model.Person;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.ws.rs.NotFoundException;
@@ -42,14 +39,9 @@ import org.osgi.service.component.annotations.Component;
  *
  * @author Alejandro Hernández
  */
-@Component(
-	immediate = true,
-	service = {CollectionRouter.class, ItemRouter.class, Representable.class}
-)
+@Component(immediate = true)
 public class BlogPostingCollectionResource
-	implements CollectionRouter<BlogPosting>,
-			   ItemRouter<BlogPosting, LongIdentifier>,
-			   Representable<BlogPosting, LongIdentifier> {
+	implements CollectionResource<BlogPosting, Long> {
 
 	@Override
 	public CollectionRoutes<BlogPosting> collectionRoutes(
@@ -58,7 +50,7 @@ public class BlogPostingCollectionResource
 		return builder.addGetter(
 			this::_getPageItems
 		).addCreator(
-			this::_addBlogPosting
+			this::_addBlogPosting, BlogPostingForm::buildForm
 		).build();
 	}
 
@@ -69,25 +61,25 @@ public class BlogPostingCollectionResource
 
 	@Override
 	public ItemRoutes<BlogPosting> itemRoutes(
-		ItemRoutes.Builder<BlogPosting, LongIdentifier> builder) {
+		ItemRoutes.Builder<BlogPosting, Long> builder) {
 
 		return builder.addGetter(
 			this::_getBlogPosting
 		).addRemover(
 			this::_deleteBlogPosting
 		).addUpdater(
-			this::_updateBlogPosting
+			this::_updateBlogPosting, BlogPostingForm::buildForm
 		).build();
 	}
 
 	@Override
-	public Representor<BlogPosting, LongIdentifier> representor(
-		Representor.Builder<BlogPosting, LongIdentifier> builder) {
+	public Representor<BlogPosting, Long> representor(
+		Representor.Builder<BlogPosting, Long> builder) {
 
 		return builder.types(
 			"BlogPosting"
 		).identifier(
-			blogPosting -> blogPosting::getBlogPostingId
+			BlogPosting::getBlogPostingId
 		).addDate(
 			"dateCreated", BlogPosting::getCreateDate
 		).addDate(
@@ -96,8 +88,7 @@ public class BlogPostingCollectionResource
 			"creator", Person.class,
 			blogPosting -> Person.getPerson(blogPosting.getCreatorId())
 		).addRelatedCollection(
-			"comments", BlogPostingComment.class,
-			blogPosting -> (LongIdentifier)blogPosting::getBlogPostingId
+			"comments", BlogPostingComment.class, BlogPosting::getBlogPostingId
 		).addString(
 			"alternativeHeadline", BlogPosting::getSubtitle
 		).addString(
@@ -109,29 +100,24 @@ public class BlogPostingCollectionResource
 		).build();
 	}
 
-	private BlogPosting _addBlogPosting(Map<String, Object> body) {
-		String content = (String)body.get("articleBody");
-		Long creatorId = (Long)body.get("creator");
-		String subtitle = (String)body.get("alternativeHeadline");
-		String title = (String)body.get("headline");
-
-		return BlogPosting.addBlogPosting(content, creatorId, subtitle, title);
+	private BlogPosting _addBlogPosting(BlogPostingForm blogPostingForm) {
+		return BlogPosting.addBlogPosting(
+			blogPostingForm.getArticleBody(), blogPostingForm.getCreator(),
+			blogPostingForm.getAlternativeHeadline(),
+			blogPostingForm.getHeadline());
 	}
 
-	private void _deleteBlogPosting(LongIdentifier blogPostingLongIdentifier) {
-		BlogPosting.deleteBlogPosting(blogPostingLongIdentifier.getId());
+	private void _deleteBlogPosting(Long blogPostingId) {
+		BlogPosting.deleteBlogPosting(blogPostingId);
 	}
 
-	private BlogPosting _getBlogPosting(
-		LongIdentifier blogPostingLongIdentifier) {
-
+	private BlogPosting _getBlogPosting(Long blogPostingId) {
 		Optional<BlogPosting> optional = BlogPosting.getBlogPosting(
-			blogPostingLongIdentifier.getId());
+			blogPostingId);
 
 		return optional.orElseThrow(
 			() -> new NotFoundException(
-				"Unable to get blog posting " +
-					blogPostingLongIdentifier.getId()));
+				"Unable to get blog posting " + blogPostingId));
 	}
 
 	private PageItems<BlogPosting> _getPageItems(Pagination pagination) {
@@ -143,21 +129,17 @@ public class BlogPostingCollectionResource
 	}
 
 	private BlogPosting _updateBlogPosting(
-		LongIdentifier blogPostingLongIdentifier, Map<String, Object> body) {
-
-		String content = (String)body.get("articleBody");
-		Long creatorId = (Long)body.get("creator");
-		String subtitle = (String)body.get("alternativeHeadline");
-		String title = (String)body.get("headline");
+		Long blogPostingId, BlogPostingForm blogPostingForm) {
 
 		Optional<BlogPosting> optional = BlogPosting.updateBlogPosting(
-			blogPostingLongIdentifier.getId(), content, creatorId, subtitle,
-			title);
+			blogPostingId, blogPostingForm.getArticleBody(),
+			blogPostingForm.getCreator(),
+			blogPostingForm.getAlternativeHeadline(),
+			blogPostingForm.getHeadline());
 
 		return optional.orElseThrow(
 			() -> new NotFoundException(
-				"Unable to get blog posting " +
-					blogPostingLongIdentifier.getId()));
+				"Unable to get blog posting " + blogPostingId));
 	}
 
 }

@@ -4,8 +4,8 @@
 [subrepo]
 	autopull = false
 	cmdver = liferay
-	commit = 6a0895b4dcb08403bff815324c3ad0e2a6e8e623
+	commit = a06ac36a6c3dc1b5882c6d69ecc9a9730a359909
 	mergebuttonmergecommits = false
 	mode = push
-	parent = 457ecbfe48dcca149459460369aa431e7e94d547
+	parent = 456a6f789b5b67ade4dee91dcd60f7a9c7c93aa2
 	remote = git@github.com:liferay/com-liferay-portal-scheduler.git
