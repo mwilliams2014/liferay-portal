@@ -6,20 +6,18 @@ import 'layout-admin-web/js/fragments_editor/fragment_entry_link/FragmentEntryLi
 import templates from './FragmentEntryDisplay.soy';
 
 /**
- * FragmentEntryDisplay
- * @review
+ * Creates a Fragment Entry Display Component
  */
 
 class FragmentEntryDisplay extends Component {
 
 	/**
-	 * Callback executed everytime an editable field has been changed
+	 * Callback executed everytime an editable field is changed
 	 * @param {{
 	 *   editableId: !string,
 	 *   value: !string
 	 * }} data
 	 * @private
-	 * @review
 	 */
 
 	_handleEditableChanged(data) {
@@ -47,9 +45,8 @@ class FragmentEntryDisplay extends Component {
 	}
 
 	/**
-	 * Sends the change of a single fragment entry link to the server.
+	 * Sends a single fragment entry link change to the server
 	 * @private
-	 * @review
 	 */
 
 	_updateFragmentEntryLink() {
@@ -78,7 +75,6 @@ class FragmentEntryDisplay extends Component {
 
 /**
  * State definition.
- * @review
  * @static
  * @type {!Object}
  */
@@ -86,22 +82,20 @@ class FragmentEntryDisplay extends Component {
 FragmentEntryDisplay.STATE = {
 
 	/**
-	 * Default configuration for AlloyEditor instances.
+	 * Default configuration for AlloyEditor instances
 	 * @default {}
 	 * @instance
 	 * @memberOf FragmentEntryDisplay
-	 * @review
 	 * @type {object}
 	 */
 
 	defaultEditorConfiguration: Config.object().value({}),
 
 	/**
-	 * URL for updating a distinct fragment entries of the editor.
+	 * URL for updating an editor fragment entry
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEntryDisplay
-	 * @review
 	 * @type {!string}
 	 */
 
@@ -112,7 +106,6 @@ FragmentEntryDisplay.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEntryDisplay
-	 * @review
 	 * @type {{
 	 * 		config: object,
 	 * 		content: any,
@@ -137,33 +130,30 @@ FragmentEntryDisplay.STATE = {
 	),
 
 	/**
-	 * Image selector url
+	 * Image selector URL
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEntryDisplay
-	 * @review
 	 * @type {!string}
 	 */
 
 	imageSelectorURL: Config.string().required(),
 
 	/**
-	 * Portlet namespace needed for prefixing form inputs
+	 * Portlet namespace that prefixes form inputs
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEntryDisplay
-	 * @review
 	 * @type {!string}
 	 */
 
 	portletNamespace: Config.string().required(),
 
 	/**
-	 * Path of the available icons.
+	 * Path of the available icons
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEntryDisplay
-	 * @review
 	 * @type {!string}
 	 */
 

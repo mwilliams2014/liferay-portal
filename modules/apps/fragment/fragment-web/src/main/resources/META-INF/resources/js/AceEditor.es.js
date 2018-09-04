@@ -5,16 +5,15 @@ import {Config} from 'metal-state';
 import templates from './AceEditor.soy';
 
 /**
- * Component that creates an instance of Ace editor
- * to allow code editing.
- * @review
+ * Creates a Ace Editor Component
+ *
+ * Lets you use an instance of Ace editor to edit code
  */
 
 class AceEditor extends Component {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 
 	attached() {
@@ -53,7 +52,6 @@ class AceEditor extends Component {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 
 	shouldUpdate() {
@@ -61,10 +59,9 @@ class AceEditor extends Component {
 	}
 
 	/**
-	 * Callback executed when the internal Ace editor has been
-	 * modified. It simply propagates the event.
+	 * Callback that propagates the `contentChanged` event when 
+	 * the internal Ace editor is modified
 	 * @private
-	 * @review
 	 */
 
 	_handleDocumentChanged() {
@@ -86,11 +83,10 @@ class AceEditor extends Component {
 	}
 
 	/**
-	 * Override AceEditor's session setAnnotations method to avoid showing
-	 * misleading messages.
+	 * Overrides AceEditor's session `setAnnotations` method to avoid showing
+	 * misleading messages
 	 * @param {Object} session AceEditor session
 	 * @private
-	 * @review
 	 */
 
 	_overrideSetAnnotations(session) {
@@ -106,7 +102,6 @@ class AceEditor extends Component {
 
 /**
  * Available AceEditor syntax
- * @review
  * @static
  * @type {Object}
  */
@@ -119,7 +114,6 @@ AceEditor.SYNTAX = {
 
 /**
  * State definition.
- * @review
  * @static
  * @type {!Object}
  */
@@ -131,20 +125,17 @@ AceEditor.STATE = {
 	 * @default ''
 	 * @instance
 	 * @memberOf AceEditor
-	 * @review
 	 * @type {string}
 	 */
 
 	initialContent: Config.string().value(''),
 
 	/**
-	 * Syntax used for the editor.
-	 * It will be used for Ace and rendered on the interface.
+	 * Syntax used for the Ace editor that is rendered on the interface
 	 * @default undefined
 	 * @instance
 	 * @memberOf AceEditor
-	 * @review
-	 * @see AceEditor.SYNTAX
+	 * @see {@link AceEditor.SYNTAX|SYNTAX}
 	 * @type {!string}
 	 */
 
