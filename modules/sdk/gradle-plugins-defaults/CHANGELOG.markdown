@@ -4507,6 +4507,103 @@ used inside `build.gradle` files.
 - [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
 3.12.128.
 
+## 5.5.38 - 2018-09-10
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.129.
+
+## 5.5.39 - 2018-09-10
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.130.
+
+## 5.5.40 - 2018-09-11
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.131.
+
+## 5.5.41 - 2018-09-11
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.132.
+
+## 5.5.42 - 2018-09-11
+
+### Fixed
+- [LPS-69453]: Avoid throwing an exception while running
+`gradlew deployDependencies` when the value of the `Bundle-Symbolic-Name`
+manifest header for the deployed JAR does not contain a period.
+
+## 5.5.43 - 2018-09-11
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.133.
+
+## 5.5.44 - 2018-09-12
+
+### Changed
+- [LPS-65845]: Update the [Liferay Gradle Plugins Cache] dependency to version
+1.0.13.
+
+## 5.5.45 - 2018-09-12
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.134.
+
+## 5.5.46 - 2018-09-13
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.135.
+
+## 5.5.47 - 2018-09-17
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.136.
+
+## 5.5.48 - 2018-09-17
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.137.
+
+## 5.5.49 - 2018-09-18
+
+### Changed
+- [LPS-85035]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.138.
+
+## 5.5.50 - 2018-09-18
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.139.
+
+## 5.5.51 - 2018-09-18
+
+### Changed
+- [LPS-85296]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.140.
+
+## 5.5.52 - 2018-09-19
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.141.
+
+## 5.5.53 - 2018-09-20
+
+### Changed
+- [LPS-71117]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.142.
+
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle Dependency Management]: https://github.com/spring-gradle-plugins/dependency-management-plugin
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
@@ -4514,6 +4611,7 @@ used inside `build.gradle` files.
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
 [Liferay Gradle Plugins App Javadoc Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-app-javadoc-builder
 [Liferay Gradle Plugins Baseline]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-baseline
+[Liferay Gradle Plugins Cache]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-cache
 [Liferay Gradle Plugins Change Log Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-change-log-builder
 [Liferay Gradle Plugins Dependency Checker]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-dependency-checker
 [Liferay Gradle Plugins JSDoc]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-jsdoc
@@ -4533,6 +4631,7 @@ used inside `build.gradle` files.
 [LPS-64098]: https://issues.liferay.com/browse/LPS-64098
 [LPS-65179]: https://issues.liferay.com/browse/LPS-65179
 [LPS-65633]: https://issues.liferay.com/browse/LPS-65633
+[LPS-65845]: https://issues.liferay.com/browse/LPS-65845
 [LPS-65930]: https://issues.liferay.com/browse/LPS-65930
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
 [LPS-66762]: https://issues.liferay.com/browse/LPS-66762
@@ -4975,7 +5074,9 @@ used inside `build.gradle` files.
 [LPS-84624]: https://issues.liferay.com/browse/LPS-84624
 [LPS-84887]: https://issues.liferay.com/browse/LPS-84887
 [LPS-84891]: https://issues.liferay.com/browse/LPS-84891
+[LPS-85035]: https://issues.liferay.com/browse/LPS-85035
 [LPS-85092]: https://issues.liferay.com/browse/LPS-85092
+[LPS-85296]: https://issues.liferay.com/browse/LPS-85296
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

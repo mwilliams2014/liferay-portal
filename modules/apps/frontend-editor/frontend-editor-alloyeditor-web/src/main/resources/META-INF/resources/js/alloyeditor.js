@@ -93,7 +93,7 @@ AUI.add(
 
 						// LPS-84186
 
-						window[instance.get('namespace')]._localeChangeHandle =  Liferay.on('inputLocalized:localeChanged', instance._onLocaleChangedHandler, instance);
+						window[instance.get('namespace')]._localeChangeHandle = Liferay.on('inputLocalized:localeChanged', instance._onLocaleChangedHandler, instance);
 
 						var nativeEditor = instance.getNativeEditor();
 
@@ -138,7 +138,7 @@ AUI.add(
 
 						// LPS-84186
 
-						var localeChangeHandle = window[instance.get('namespace')]._localeChangeHandle =  Liferay.on('inputLocalized:localeChanged', instance._onLocaleChangedHandler, instance);
+						var localeChangeHandle = window[instance.get('namespace')]._localeChangeHandle = Liferay.on('inputLocalized:localeChanged', instance._onLocaleChangedHandler, instance);
 
 						if (localeChangeHandle) {
 							localeChangeHandle.detach();

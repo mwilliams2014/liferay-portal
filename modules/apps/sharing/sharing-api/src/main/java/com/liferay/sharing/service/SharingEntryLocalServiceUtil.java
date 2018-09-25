@@ -42,16 +42,29 @@ public class SharingEntryLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.sharing.service.impl.SharingEntryLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.sharing.model.SharingEntry addOrUpdateSharingEntry(
+		long fromUserId, long toUserId, long classNameId, long classPK,
+		long groupId, boolean shareable,
+		java.util.Collection<com.liferay.sharing.security.permission.SharingEntryAction> sharingEntryActions,
+		java.util.Date expirationDate,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addOrUpdateSharingEntry(fromUserId, toUserId, classNameId,
+			classPK, groupId, shareable, sharingEntryActions, expirationDate,
+			serviceContext);
+	}
+
 	public static com.liferay.sharing.model.SharingEntry addSharingEntry(
 		long fromUserId, long toUserId, long classNameId, long classPK,
 		long groupId, boolean shareable,
-		java.util.Collection<com.liferay.sharing.constants.SharingEntryActionKey> sharingEntryActionKeys,
+		java.util.Collection<com.liferay.sharing.security.permission.SharingEntryAction> sharingEntryActions,
 		java.util.Date expirationDate,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addSharingEntry(fromUserId, toUserId, classNameId, classPK,
-			groupId, shareable, sharingEntryActionKeys, expirationDate,
+			groupId, shareable, sharingEntryActions, expirationDate,
 			serviceContext);
 	}
 
@@ -392,39 +405,47 @@ public class SharingEntryLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.sharing.model.SharingEntry> getToUserSharingEntries(
+		long toUserId, int start, int end) {
+		return getService().getToUserSharingEntries(toUserId, start, end);
+	}
+
+	public static java.util.List<com.liferay.sharing.model.SharingEntry> getToUserSharingEntries(
 		long toUserId, long classNameId) {
 		return getService().getToUserSharingEntries(toUserId, classNameId);
 	}
 
 	public static boolean hasShareableSharingPermission(long toUserId,
 		long classNameId, long classPK,
-		com.liferay.sharing.constants.SharingEntryActionKey sharingEntryActionKey) {
+		com.liferay.sharing.security.permission.SharingEntryAction sharingEntryAction) {
 		return getService()
 				   .hasShareableSharingPermission(toUserId, classNameId,
-			classPK, sharingEntryActionKey);
+			classPK, sharingEntryAction);
 	}
 
 	public static boolean hasSharingPermission(long toUserId, long classNameId,
 		long classPK,
-		com.liferay.sharing.constants.SharingEntryActionKey sharingEntryActionKey) {
+		com.liferay.sharing.security.permission.SharingEntryAction sharingEntryAction) {
 		return getService()
 				   .hasSharingPermission(toUserId, classNameId, classPK,
-			sharingEntryActionKey);
+			sharingEntryAction);
 	}
 
 	public static boolean hasSharingPermission(
 		com.liferay.sharing.model.SharingEntry sharingEntry,
-		com.liferay.sharing.constants.SharingEntryActionKey sharingEntryActionKey) {
+		com.liferay.sharing.security.permission.SharingEntryAction sharingEntryAction) {
 		return getService()
-				   .hasSharingPermission(sharingEntry, sharingEntryActionKey);
+				   .hasSharingPermission(sharingEntry, sharingEntryAction);
 	}
 
 	public static com.liferay.sharing.model.SharingEntry updateSharingEntry(
 		long sharingEntryId,
-		java.util.Collection<com.liferay.sharing.constants.SharingEntryActionKey> sharingEntryActionKeys)
+		java.util.Collection<com.liferay.sharing.security.permission.SharingEntryAction> sharingEntryActions,
+		boolean shareable, java.util.Date expirationDate,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .updateSharingEntry(sharingEntryId, sharingEntryActionKeys);
+				   .updateSharingEntry(sharingEntryId, sharingEntryActions,
+			shareable, expirationDate, serviceContext);
 	}
 
 	/**

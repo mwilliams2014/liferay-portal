@@ -58,7 +58,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
@@ -768,11 +767,13 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static GitWorkingDirectory getJenkinsGitWorkingDirectory() {
-		LocalGitRepository localGitRepository =
-			GitRepositoryFactory.getLocalGitRepository(
-				"liferay-jenkins-ee", "master");
+		String gitRepositoryName = "liferay-jenkins-ee";
 
-		return localGitRepository.getGitWorkingDirectory();
+		File gitRepositoryDir = new File(
+			getBaseGitRepositoryDir(), gitRepositoryName);
+
+		return GitWorkingDirectoryFactory.newGitWorkingDirectory(
+			"master", gitRepositoryDir, gitRepositoryName);
 	}
 
 	public static List<JenkinsMaster> getJenkinsMasters(
@@ -984,20 +985,24 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static PortalGitWorkingDirectory getPortalGitWorkingDirectory(
-		String portalBranchName) {
+		String upstreamBranchName) {
 
-		String portalGitRepositoryName = "liferay-portal";
+		String gitRepositoryName = "liferay-portal";
 
-		if (!portalBranchName.equals("master")) {
-			portalGitRepositoryName += "-ee";
+		if (!upstreamBranchName.equals("master")) {
+			gitRepositoryName += "-ee";
 		}
 
-		LocalGitRepository localGitRepository =
-			GitRepositoryFactory.getLocalGitRepository(
-				portalGitRepositoryName, portalBranchName);
+		File gitRepositoryDir = new File(
+			getBaseGitRepositoryDir(), gitRepositoryName);
 
 		GitWorkingDirectory gitWorkingDirectory =
-			localGitRepository.getGitWorkingDirectory();
+			GitWorkingDirectoryFactory.newGitWorkingDirectory(
+				upstreamBranchName, gitRepositoryDir, gitRepositoryName);
+
+		if (!(gitWorkingDirectory instanceof PortalGitWorkingDirectory)) {
+			throw new RuntimeException("Invalid Git working directory");
+		}
 
 		return (PortalGitWorkingDirectory)gitWorkingDirectory;
 	}
@@ -1137,50 +1142,6 @@ public class JenkinsResultsParserUtil {
 		throws Exception {
 
 		return getSlaves(getBuildProperties(), jenkinsMasterPatternString);
-	}
-
-	public static void invokeJob(
-		String cohortName, String jobName,
-		Map<String, String> invocationParameters) {
-
-		Properties buildProperties;
-
-		try {
-			buildProperties = getBuildProperties();
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
-
-		List<JenkinsMaster> jenkinsMasters = getJenkinsMasters(
-			buildProperties, cohortName);
-
-		String randomJenkinsURL = getMostAvailableMasterURL(
-			"http://" + cohortName + ".liferay.com", jenkinsMasters.size());
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(randomJenkinsURL);
-		sb.append("/job/");
-		sb.append(jobName);
-		sb.append("/buildWithParameters?token=");
-		sb.append(buildProperties.getProperty("jenkins.authentication.token"));
-
-		for (Map.Entry<String, String> invocationParameter :
-				invocationParameters.entrySet()) {
-
-			sb.append("&");
-			sb.append(fixURL(invocationParameter.getKey()));
-			sb.append("=");
-			sb.append(fixURL(invocationParameter.getValue()));
-		}
-
-		try {
-			toString(sb.toString());
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
 	}
 
 	public static boolean isCINode() {

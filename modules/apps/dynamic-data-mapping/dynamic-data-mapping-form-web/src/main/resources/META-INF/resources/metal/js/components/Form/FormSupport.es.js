@@ -25,6 +25,7 @@ const addFieldToColumn = (pages, pageIndex, rowIndex, columnIndex, field) => {
 	}
 	else {
 		const numberOfRows = pages[Number(pageIndex)].rows.length;
+
 		if (rowIndex >= numberOfRows) {
 			pages = addRow(pages, numberOfRows, pageIndex);
 		}
@@ -36,12 +37,12 @@ const addFieldToColumn = (pages, pageIndex, rowIndex, columnIndex, field) => {
 	return pages;
 };
 
-const checkEmptyPage = pages => {
+const emptyPages = pages => {
 	let empty = true;
 	const visitor = new PagesVisitor(pages);
 
 	visitor.mapFields(
-		field => {
+		() => {
 			empty = false;
 		}
 	);
@@ -76,6 +77,7 @@ const removeFields = (pages, pageIndex, rowIndex, columnIndex) => {
 	return visitor.mapColumns(
 		(column, currentColumnIndex, currentRowIndex, currentPageIndex) => {
 			const newColumn = {...column};
+
 			if (
 				currentPageIndex === pageIndex &&
 				currentRowIndex === rowIndex &&
@@ -113,8 +115,10 @@ const getRow = (pages, pageIndex, rowIndex) => {
 const rowHasFields = (pages, pageIndex, rowIndex) => {
 	let hasFields = false;
 	const page = pages[Number(pageIndex)];
+
 	if (page) {
 		const row = page.rows[Number(rowIndex)];
+
 		if (row) {
 			hasFields = row.columns.some(column => column.fields.length);
 		}
@@ -159,7 +163,7 @@ const updateField = (
 export default {
 	addFieldToColumn,
 	addRow,
-	checkEmptyPage,
+	emptyPages,
 	generateFieldName,
 	getColumn,
 	getField,

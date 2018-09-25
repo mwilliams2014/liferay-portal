@@ -153,7 +153,7 @@ public class AssetPublisherDisplayContext {
 	/**
 	 * @deprecated As of Judson (7.1.x), replaced by {@link
 	 *             #AssetPublisherDisplayContext(AssetPublisherCustomizer,
-	 *             PortletRequest,PortletResponse, PortletPreferences)}
+	 *             PortletRequest, PortletResponse, PortletPreferences)}
 	 */
 	@Deprecated
 	public AssetPublisherDisplayContext(
@@ -251,6 +251,26 @@ public class AssetPublisherDisplayContext {
 		return _allAssetTagNames;
 	}
 
+	public List<AssetEntry> getAssetEntries() throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		AssetListEntry assetListEntry = fetchAssetListEntry();
+
+		if (isSelectionStyleManual()) {
+			return AssetPublisherUtil.getAssetEntries(
+				_portletRequest, _portletPreferences,
+				themeDisplay.getPermissionChecker(), getGroupIds(),
+				getAllAssetCategoryIds(), getAllAssetTagNames(), false,
+				isEnablePermissions());
+		}
+		else if (isSelectionStyleAssetList() && (assetListEntry != null)) {
+			return assetListEntry.getAssetEntries();
+		}
+
+		return Collections.emptyList();
+	}
+
 	public List<AssetEntryAction> getAssetEntryActions(String className) {
 		return _assetEntryActionRegistry.getAssetEntryActions(className);
 	}
@@ -266,12 +286,7 @@ public class AssetPublisherDisplayContext {
 			WebKeys.THEME_DISPLAY);
 
 		if (isSelectionStyleAssetList() && (assetListEntry != null)) {
-			long[] groupIds = AssetPublisherUtil.getGroupIds(
-				_portletPreferences, themeDisplay.getScopeGroupId(),
-				themeDisplay.getLayout());
-
-			_assetEntryQuery = assetListEntry.getAssetEntryQuery(
-				groupIds, themeDisplay.getLayout());
+			_assetEntryQuery = assetListEntry.getAssetEntryQuery();
 		}
 		else {
 			_assetEntryQuery = AssetPublisherUtil.getAssetEntryQuery(

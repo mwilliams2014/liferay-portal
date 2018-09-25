@@ -44,6 +44,18 @@ const INITIAL_STATE = {
 	classPK: Config.string().required(),
 
 	/**
+	 * Allow opening/closing contextual sidebar
+	 * @default true
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {boolean}
+	 */
+
+	contextualSidebarVisible: Config.bool().value(true),
+
+	/**
 	 * URL for removing fragment entries of the underlying model.
 	 * @default undefined
 	 * @instance
@@ -55,23 +67,14 @@ const INITIAL_STATE = {
 	deleteFragmentEntryLinkURL: Config.string().required(),
 
 	/**
-	 * List of fragment instances being used, the order
-	 * of the elements in this array defines their position.
-	 * @default []
+	 * List of fragment instances being used.
+	 * @default {}
 	 * @instance
-	 * @memberOf FragmentsEditor
 	 * @review
-	 * @type {Array<{
-	 *   config: Object,
-	 *   content: string,
-	 *   editableValues: Object,
-	 *   fragmentEntryId: !string,
-	 *   fragmentEntryLinkId: !string,
-	 *   name: !string
-	 * }>}
+	 * @type {!object}
 	 */
 
-	fragmentEntryLinks: Config.arrayOf(
+	fragmentEntryLinks: Config.objectOf(
 		Config.shapeOf(
 			{
 				config: Config.object().value({}),
@@ -82,7 +85,18 @@ const INITIAL_STATE = {
 				name: Config.string().required()
 			}
 		)
-	).value([]),
+	).value({}),
+
+	/**
+	 * If true, editable values should be highlighted.
+	 * @default false
+	 * @instance
+	 * @review
+	 * @type {boolean}
+	 */
+
+	highlightMapping: Config.bool()
+		.value(false),
 
 	/**
 	 * Position where a fragment is being dragged to
@@ -109,6 +123,16 @@ const INITIAL_STATE = {
 		.value(null),
 
 	/**
+	 * Currently selected language id.
+	 * @default undefined
+	 * @instance
+	 * @review
+	 * @type {!string}
+	 */
+
+	languageId: Config.string().required(),
+
+	/**
 	 * Last date when the autosave has been executed.
 	 * @default ''
 	 * @instance
@@ -119,6 +143,26 @@ const INITIAL_STATE = {
 	lastSaveDate: Config.string()
 		.internal()
 		.value(''),
+
+	/**
+	 * Data associated to the layout
+	 * @default {structure: []}
+	 * @instance
+	 * @review
+	 * @type {{structure: Array<string>}}
+	 */
+
+	layoutData: Config
+		.shapeOf(
+			{
+				structure: Config.arrayOf(Config.string())
+			}
+		)
+		.value(
+			{
+				structure: []
+			}
+		),
 
 	/**
 	 * Portlet namespace needed for prefixing form inputs
@@ -152,7 +196,112 @@ const INITIAL_STATE = {
 
 	savingChanges: Config.bool()
 		.internal()
-		.value(false)
+		.value(false),
+
+	/**
+	 * Editable type of the field that is being mapped
+	 * @default ''
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {string}
+	 */
+
+	selectMappingDialogEditableType: Config
+		.string()
+		.value(''),
+
+	/**
+	 * EditableId of the field that is being mapped
+	 * @default ''
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {string}
+	 */
+
+	selectMappingDialogEditableId: Config
+		.string()
+		.value(''),
+
+	/**
+	 * FragmentEntryLinkId of the field that is being mapped
+	 * @default ''
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {string}
+	 */
+
+	selectMappingDialogFragmentEntryLinkId: Config
+		.string()
+		.value(''),
+
+	/**
+	 * Mapped field ID of the field that is being mapped
+	 * @default ''
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {string}
+	 */
+
+	selectMappingDialogMappedFieldId: Config
+		.string()
+		.value(''),
+
+	/**
+	 * Flag indicating if the SelectMappingDialog should be shown
+	 * @default false
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {boolean}
+	 */
+
+	selectMappingDialogVisible: Config
+		.bool()
+		.value(false),
+
+	/**
+	 * Flag indicating if the SelectMappingTypeDialog should be shown
+	 * @default false
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {boolean}
+	 */
+
+	selectMappingTypeDialogVisible: Config
+		.bool()
+		.value(false),
+
+	/**
+	 * URL for updating layout data.
+	 * @default undefined
+	 * @instance
+	 * @review
+	 * @type {!string}
+	 */
+
+	updateLayoutPageTemplateDataURL: Config.string().required(),
+
+	/**
+	 * URL for updating the asset type associated to a template.
+	 * @default undefined
+	 * @instance
+	 * @memberOf SelectMappingTypeDialog
+	 * @review
+	 * @type {!string}
+	 */
+
+	updateLayoutPageTemplateEntryAssetTypeURL: Config.string().required()
 };
 
 export {INITIAL_STATE};

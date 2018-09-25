@@ -452,7 +452,7 @@ public class DDMFormAdminDisplayContext {
 						navigationItem.setActive(true);
 						navigationItem.setHref(StringPool.BLANK);
 						navigationItem.setLabel(
-							LanguageUtil.get(request, "builder"));
+							LanguageUtil.get(request, "form"));
 					});
 
 				add(
@@ -572,19 +572,36 @@ public class DDMFormAdminDisplayContext {
 			_ddmFormFieldTypeServicesTracker);
 	}
 
+	public String getFunctionsMetadata() throws PortalException {
+		DDMFormBuilderSettingsResponse ddmFormBuilderSettingsResponse =
+			getDDMFormBuilderSettingsResponse();
+
+		return ddmFormBuilderSettingsResponse.getFunctionsMetadata();
+	}
+
 	public JSONFactory getJSONFactory() {
 		return _jsonFactory;
 	}
 
-	public long getLatestDDMStructureVersionId() throws PortalException {
+	public DDMStructureVersion getLatestDDMStructureVersion()
+		throws PortalException {
+
 		DDMStructure structure = getDDMStructure();
 
 		if (structure == null) {
-			return 0;
+			return null;
 		}
 
+		return structure.getLatestStructureVersion();
+	}
+
+	public long getLatestDDMStructureVersionId() throws PortalException {
 		DDMStructureVersion latestDDMStructureVersion =
-			structure.getLatestStructureVersion();
+			getLatestDDMStructureVersion();
+
+		if (latestDDMStructureVersion == null) {
+			return 0;
+		}
 
 		return latestDDMStructureVersion.getStructureVersionId();
 	}
@@ -779,16 +796,8 @@ public class DDMFormAdminDisplayContext {
 	}
 
 	public String getSerializedDDMFormRules() throws PortalException {
-		ThemeDisplay themeDisplay = formAdminRequestHelper.getThemeDisplay();
-
-		DDMFormBuilderSettingsRequest ddmFormBuilderSettingsRequest =
-			DDMFormBuilderSettingsRequest.with(
-				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), 0,
-				getDDMForm(), themeDisplay.getLocale());
-
 		DDMFormBuilderSettingsResponse ddmFormBuilderSettingsResponse =
-			_ddmFormBuilderSettingsRetriever.getSettings(
-				ddmFormBuilderSettingsRequest);
+			getDDMFormBuilderSettingsResponse();
 
 		return ddmFormBuilderSettingsResponse.getSerializedDDMFormRules();
 	}
@@ -805,24 +814,17 @@ public class DDMFormAdminDisplayContext {
 
 		JSONSerializer jsonSerializer = _jsonFactory.createJSONSerializer();
 
-		Optional<DDMStructure> ddmStructureOptional = Optional.ofNullable(
-			_ddmStructureLocalService.fetchDDMStructure(getDDMStructureId()));
+		DDMFormBuilderContextRequest ddmFormBuilderContextRequest =
+			DDMFormBuilderContextRequest.with(
+				Optional.ofNullable(null), themeDisplay.getRequest(),
+				themeDisplay.getResponse(), themeDisplay.getSiteDefaultLocale(),
+				true);
 
-		Locale defaultLocale = themeDisplay.getSiteDefaultLocale();
-
-		if (ddmStructureOptional.isPresent()) {
-			DDMStructure ddmStructure = ddmStructureOptional.get();
-
-			DDMForm ddmForm = ddmStructure.getDDMForm();
-
-			defaultLocale = ddmForm.getDefaultLocale();
-		}
+		ddmFormBuilderContextRequest.addProperty(
+			"ddmStructureVersion", getLatestDDMStructureVersion());
 
 		DDMFormBuilderContextResponse ddmFormBuilderContextResponse =
-			_ddmFormBuilderContextFactory.create(
-				DDMFormBuilderContextRequest.with(
-					ddmStructureOptional, themeDisplay.getRequest(),
-					themeDisplay.getResponse(), defaultLocale, true));
+			_ddmFormBuilderContextFactory.create(ddmFormBuilderContextRequest);
 
 		return jsonSerializer.serializeDeep(
 			ddmFormBuilderContextResponse.getContext());
@@ -914,6 +916,27 @@ public class DDMFormAdminDisplayContext {
 		}
 
 		return form;
+	}
+
+	protected DDMFormBuilderSettingsResponse getDDMFormBuilderSettingsResponse()
+		throws PortalException {
+
+		if (_ddmFormBuilderSettingsResponse != null) {
+			return _ddmFormBuilderSettingsResponse;
+		}
+
+		ThemeDisplay themeDisplay = formAdminRequestHelper.getThemeDisplay();
+
+		DDMFormBuilderSettingsRequest ddmFormBuilderSettingsRequest =
+			DDMFormBuilderSettingsRequest.with(
+				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), 0,
+				getDDMForm(), themeDisplay.getLocale());
+
+		_ddmFormBuilderSettingsResponse =
+			_ddmFormBuilderSettingsRetriever.getSettings(
+				ddmFormBuilderSettingsRequest);
+
+		return _ddmFormBuilderSettingsResponse;
 	}
 
 	protected OrderByComparator<DDMFormInstance>
@@ -1223,6 +1246,7 @@ public class DDMFormAdminDisplayContext {
 	private final AddDefaultSharedFormLayoutPortalInstanceLifecycleListener
 		_addDefaultSharedFormLayoutPortalInstanceLifecycleListener;
 	private final DDMFormBuilderContextFactory _ddmFormBuilderContextFactory;
+	private DDMFormBuilderSettingsResponse _ddmFormBuilderSettingsResponse;
 	private final DDMFormBuilderSettingsRetriever
 		_ddmFormBuilderSettingsRetriever;
 	private final DDMFormFieldTypeServicesTracker

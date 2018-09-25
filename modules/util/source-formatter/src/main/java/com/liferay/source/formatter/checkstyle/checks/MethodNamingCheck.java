@@ -73,7 +73,7 @@ public class MethodNamingCheck extends BaseCheck {
 			}
 		}
 
-		log(detailAST.getLineNo(), _MSG_RENAME_METHOD, methodName, noDoName);
+		log(detailAST, _MSG_RENAME_METHOD, methodName, noDoName);
 	}
 
 	private void _checkNonMethodName(DetailAST detailAST, String methodName) {
@@ -100,9 +100,7 @@ public class MethodNamingCheck extends BaseCheck {
 			sb.append(s.substring(i - 1));
 		}
 
-		log(
-			detailAST.getLineNo(), _MSG_RENAME_METHOD, methodName,
-			sb.toString());
+		log(detailAST, _MSG_RENAME_METHOD, methodName, sb.toString());
 	}
 
 	private String _getMethodName(DetailAST detailAST) {
@@ -113,9 +111,9 @@ public class MethodNamingCheck extends BaseCheck {
 
 	private static final String _MSG_RENAME_METHOD = "method.rename";
 
-	private final Pattern _doMethodNamePattern = Pattern.compile(
+	private static final Pattern _doMethodNamePattern = Pattern.compile(
 		"^_do([A-Z])(.*)$");
-	private final Pattern _nonMethodNamePattern = Pattern.compile(
+	private static final Pattern _nonMethodNamePattern = Pattern.compile(
 		"(^non|.*Non)([A-Z])(.*)");
 
 }

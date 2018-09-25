@@ -61,9 +61,6 @@ public class PropertiesPortalEnvironmentVariablesCheck extends BaseFileCheck {
 			if (Character.isLowerCase(c)) {
 				sb.append(Character.toUpperCase(c));
 			}
-			else if (c == CharPool.PERIOD) {
-				sb.append(CharPool.UNDERLINE);
-			}
 			else {
 				sb.append(CharPool.UNDERLINE);
 
@@ -161,7 +158,7 @@ public class PropertiesPortalEnvironmentVariablesCheck extends BaseFileCheck {
 			}
 		};
 
-	private final Pattern _pattern = Pattern.compile(
+	private static final Pattern _pattern = Pattern.compile(
 		"    #\\n(    # (?!Env:).*\\n)+    #(\\n(    # Env:.*\\n)+    #)?" +
 			"((\\n    [#\\w][#\\w].*)+)",
 		Pattern.MULTILINE);

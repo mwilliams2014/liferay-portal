@@ -249,7 +249,7 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 				ZipEntry zipEntry = zipFile.getEntry(
 					"liferay-marketplace.properties");
 
-				jarOutputStream.putNextEntry(zipEntry);
+				jarOutputStream.putNextEntry(new ZipEntry(zipEntry.getName()));
 
 				StreamUtil.transfer(
 					zipFile.getInputStream(zipEntry), jarOutputStream, false);
@@ -301,11 +301,11 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 
 		_uninstallOrphanOverridingWars(bundleContext, warFiles);
 
-		if (_log.isInfoEnabled()) {
-			_log.info("Start refreshing uninstalled orphan bundles");
-		}
-
 		if (!removalPendingBundles.isEmpty()) {
+			if (_log.isInfoEnabled()) {
+				_log.info("Start refreshing uninstalled orphan bundles");
+			}
+
 			FrameworkEvent frameworkEvent = _refreshBundles(
 				removalPendingBundles, bundleContext);
 

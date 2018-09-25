@@ -36,8 +36,8 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
-import com.liferay.sharing.constants.SharingEntryActionKey;
 import com.liferay.sharing.model.SharingEntry;
+import com.liferay.sharing.security.permission.SharingEntryAction;
 
 import java.io.Serializable;
 
@@ -67,9 +67,15 @@ public interface SharingEntryLocalService extends BaseLocalService,
 	 *
 	 * Never modify or reference this interface directly. Always use {@link SharingEntryLocalServiceUtil} to access the sharing entry local service. Add custom service methods to {@link com.liferay.sharing.service.impl.SharingEntryLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public SharingEntry addOrUpdateSharingEntry(long fromUserId, long toUserId,
+		long classNameId, long classPK, long groupId, boolean shareable,
+		Collection<SharingEntryAction> sharingEntryActions,
+		Date expirationDate, ServiceContext serviceContext)
+		throws PortalException;
+
 	public SharingEntry addSharingEntry(long fromUserId, long toUserId,
 		long classNameId, long classPK, long groupId, boolean shareable,
-		Collection<SharingEntryActionKey> sharingEntryActionKeys,
+		Collection<SharingEntryAction> sharingEntryActions,
 		Date expirationDate, ServiceContext serviceContext)
 		throws PortalException;
 
@@ -327,24 +333,28 @@ public interface SharingEntryLocalService extends BaseLocalService,
 	public List<SharingEntry> getToUserSharingEntries(long toUserId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<SharingEntry> getToUserSharingEntries(long toUserId, int start,
+		int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<SharingEntry> getToUserSharingEntries(long toUserId,
 		long classNameId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasShareableSharingPermission(long toUserId,
-		long classNameId, long classPK,
-		SharingEntryActionKey sharingEntryActionKey);
+		long classNameId, long classPK, SharingEntryAction sharingEntryAction);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasSharingPermission(long toUserId, long classNameId,
-		long classPK, SharingEntryActionKey sharingEntryActionKey);
+		long classPK, SharingEntryAction sharingEntryAction);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasSharingPermission(SharingEntry sharingEntry,
-		SharingEntryActionKey sharingEntryActionKey);
+		SharingEntryAction sharingEntryAction);
 
 	public SharingEntry updateSharingEntry(long sharingEntryId,
-		Collection<SharingEntryActionKey> sharingEntryActionKeys)
+		Collection<SharingEntryAction> sharingEntryActions, boolean shareable,
+		Date expirationDate, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**

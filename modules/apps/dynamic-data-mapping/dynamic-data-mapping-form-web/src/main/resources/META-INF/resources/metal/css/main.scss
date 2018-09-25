@@ -26,7 +26,7 @@
 
 .sidebar-container {
 	transform: translateX(100%);
-	transition: transform 0.5s ease-in-out;
+	transition: transform 0.3s ease-in-out;
 }
 
 .sidebar-container.open {
@@ -143,6 +143,10 @@ textarea[class^="form-builder-page-header"] {
 		background: none;
 		border: none;
 	}
+}
+
+.form-builder-rule-builder-rule-description {
+	margin-bottom: 0;
 }
 
 .form-builder-select-field {
@@ -289,10 +293,14 @@ textarea[class^="form-builder-page-header"] {
 	padding: 0;
 }
 
-.sheet {
+.ddm-form-builder {
 	.modal {
 		display: none;
 		margin: inherit;
+	}
+
+	.modal-sm {
+		max-width: 300px;
 	}
 
 	.modal-dialog {
@@ -301,7 +309,7 @@ textarea[class^="form-builder-page-header"] {
 }
 
 @media (min-width: 576px) {
-	.sheet .modal-sm {
+	.ddm-form-builder .modal-sm {
 		max-width: 300px;
 	}
 }

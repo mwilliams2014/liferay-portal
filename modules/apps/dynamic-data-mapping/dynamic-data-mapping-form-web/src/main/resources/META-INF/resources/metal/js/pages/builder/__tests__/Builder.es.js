@@ -1,6 +1,7 @@
 import Builder from '../Builder.es';
-import {dom as MetalTestUtil} from 'metal-dom';
+import dom from 'metal-dom';
 import Pages from './__mock__/mockPages.es';
+import SucessPageSettings from './__mock__/mockSuccessPage.es';
 
 const spritemap = 'icons.svg';
 
@@ -9,6 +10,7 @@ let basicInfo;
 let component;
 let pages;
 let translationManager;
+let successPageSettings;
 
 const mockFieldType = {
 	description: 'Single line or multiline text area.',
@@ -68,7 +70,7 @@ const fieldTypes = [
 		}
 	},
 	{
-		description: 'Choose an or more options from a list.',
+		description: 'Choose one or more options from a list.',
 		icon: 'list',
 		label: 'Select from list',
 		name: 'select',
@@ -102,12 +104,13 @@ describe(
 		beforeEach(
 			() => {
 				pages = JSON.parse(JSON.stringify(Pages));
+				successPageSettings = JSON.parse(JSON.stringify(SucessPageSettings));
 
 				jest.useFakeTimers();
 
-				MetalTestUtil.enterDocument('<button id="addFieldButton"></button>');
-				MetalTestUtil.enterDocument('<div class="ddm-translation-manager"></div>');
-				MetalTestUtil.enterDocument('<div class="ddm-form-basic-info"></div>');
+				dom.enterDocument('<button id="addFieldButton"></button>');
+				dom.enterDocument('<div class="ddm-translation-manager"></div>');
+				dom.enterDocument('<div class="ddm-form-basic-info"></div>');
 
 				addButton = document.querySelector('#addFieldButton');
 				basicInfo = document.querySelector('.ddm-form-basic-info');
@@ -117,7 +120,9 @@ describe(
 					{
 						fieldTypes,
 						pages,
-						spritemap
+						paginationMode: 'wizard',
+						spritemap,
+						successPageSettings
 					}
 				);
 			}
@@ -125,9 +130,9 @@ describe(
 
 		afterEach(
 			() => {
-				MetalTestUtil.exitDocument(addButton);
-				MetalTestUtil.exitDocument(basicInfo);
-				MetalTestUtil.exitDocument(translationManager);
+				dom.exitDocument(addButton);
+				dom.exitDocument(basicInfo);
+				dom.exitDocument(translationManager);
 
 				if (component) {
 					component.dispose();
@@ -248,20 +253,6 @@ describe(
 		);
 
 		it(
-			'should continue to propagate the fieldDeleted event',
-			() => {
-				const {FormRenderer} = component.refs;
-				const spy = jest.spyOn(component, 'emit');
-
-				FormRenderer.emit('fieldDeleted');
-
-				jest.runAllTimers();
-
-				expect(spy).toHaveBeenCalledWith('fieldDeleted', expect.anything());
-			}
-		);
-
-		it(
 			'should continue to propagate the fieldDuplicated event',
 			() => {
 				const {FormRenderer} = component.refs;
@@ -355,6 +346,83 @@ describe(
 					...pages
 				];
 				component.props.activePage = 1;
+
+				jest.runAllTimers();
+
+				expect(spy).not.toHaveBeenCalled();
+			}
+		);
+
+		it(
+			'should show modal when trash button gets clicked',
+			() => {
+				const {FormRenderer} = component.refs;
+
+				FormRenderer.emit(
+					'fieldDeleted',
+					{
+						columnIndex: 0,
+						pageIndex: 1,
+						rowIndex: 0
+					}
+				);
+
+				jest.runAllTimers();
+
+				const modal = document.querySelector('.modal');
+
+				expect(modal.classList.contains('show')).toEqual(true);
+
+				expect(component).toMatchSnapshot();
+			}
+		);
+
+		it(
+			'should emit deleteField event when yes is clicked in the modal',
+			() => {
+				const spy = jest.spyOn(component, 'emit');
+				const {FormRenderer} = component.refs;
+				const mockEvent = jest.fn();
+
+				FormRenderer.emit('deleteFieldClicked', mockEvent);
+
+				component.element.querySelectorAll('.modal-content .btn-group .btn-group-item button')[1].click();
+
+				jest.runAllTimers();
+
+				expect(spy).toHaveBeenCalled();
+				expect(spy).toHaveBeenCalledWith('fieldDeleted', expect.anything());
+			}
+		);
+
+		it(
+			'should not open sidebar when the delete current page option item is clicked',
+			() => {
+				const spy = jest.spyOn(component, 'openSidebar');
+
+				const componentPages = [...pages, ...pages];
+
+				const builderComponent = new Builder(
+					{
+						fieldTypes,
+						pages: componentPages,
+						paginationMode: 'wizard',
+						spritemap,
+						successPageSettings
+					}
+				);
+				const data = {
+					item: {
+						settingsItem: 'reset-page'
+					}
+				};
+				const {FormRenderer} = builderComponent.refs;
+
+				FormRenderer._handlePageSettingsClicked(
+					{
+						data
+					}
+				);
 
 				jest.runAllTimers();
 

@@ -1,9 +1,13 @@
 import {Config} from 'metal-state';
+import {EventHandler} from 'metal-events';
 import {focusedFieldStructure, pageStructure} from '../../util/config.es';
-import FormSupport from '../../components/Form/FormSupport.es';
 import {PagesVisitor} from '../../util/visitors.es';
+import autobind from 'autobind-decorator';
+import ClayModal from 'clay-modal';
 import Component from 'metal-jsx';
+import dom from 'metal-dom';
 import FormRenderer from '../../components/Form/index.es';
+import FormSupport from '../../components/Form/FormSupport.es';
 import Sidebar from '../../components/Sidebar/index.es';
 
 /**
@@ -12,6 +16,17 @@ import Sidebar from '../../components/Sidebar/index.es';
  */
 
 class Builder extends Component {
+	static STATE = {
+
+		/**
+		 * @default []
+		 * @instance
+		 * @memberof FormRenderer
+		 * @type {?array<object>}
+		 */
+
+		indexes: Config.object()
+	}
 
 	static PROPS = {
 
@@ -40,7 +55,28 @@ class Builder extends Component {
 		 * @type {?array<object>}
 		 */
 
-		pages: Config.arrayOf(pageStructure).value([])
+		pages: Config.arrayOf(pageStructure).value([]),
+
+		/**
+		 * @instance
+		 * @memberof LayoutProvider
+		 * @type {string}
+		 */
+
+		paginationMode: Config.string().required(),
+
+		/**
+		 * @instance
+		 * @memberof Builder
+		 * @type {object}
+		 */
+		successPageSettings: Config.shapeOf(
+			{
+				body: Config.object(),
+				enabled: Config.bool(),
+				title: Config.object()
+			}
+		)
 	};
 
 	/**
@@ -53,6 +89,26 @@ class Builder extends Component {
 		this.emit('fieldClicked', indexAllocateField);
 	}
 
+	_handleDeleteFieldClicked(indexes) {
+		this.setState(
+			{
+				indexes
+			}
+		);
+		this._handleModal();
+	}
+
+	/**
+	 * @param {!Event} event
+	 * @private
+	 */
+
+	_handleModal() {
+		const {modal} = this.refs;
+
+		modal.show();
+	}
+
 	_handlePageAdded() {
 		this.emit('pageAdded');
 	}
@@ -61,6 +117,12 @@ class Builder extends Component {
 		const {sidebar} = this.refs;
 
 		sidebar.refreshDragAndDrop();
+	}
+
+	disposeInternal() {
+		super.disposeInternal();
+
+		this._eventHandler.removeAllListeners();
 	}
 
 	/**
@@ -88,6 +150,7 @@ class Builder extends Component {
 						pages: visitor.mapFields(
 							field => {
 								const {fieldName} = field;
+
 								if (fieldName === 'name') {
 									field = {
 										...field,
@@ -192,16 +255,6 @@ class Builder extends Component {
 
 	/**
 	 * Continues the propagation of event.
-	 * @param {!Object} indexes
-	 * @private
-	 */
-
-	_handleFieldDeleted(indexes) {
-		this.emit('fieldDeleted', indexes);
-	}
-
-	/**
-	 * Continues the propagation of event.
 	 * @param {!Object}
 	 * @private
 	 */
@@ -214,7 +267,7 @@ class Builder extends Component {
 		let {activePage, pages} = this.props;
 		let openSidebar = false;
 
-		if (changes.activePage) {
+		if (changes.activePage && changes.activePage.newVal !== -1) {
 			activePage = changes.activePage.newVal;
 
 			if (!this._pageHasFields(pages, activePage)) {
@@ -244,6 +297,32 @@ class Builder extends Component {
 		sidebar.open();
 	}
 
+	syncVisible(visible) {
+		const addButton = document.querySelector('#addFieldButton');
+
+		super.syncVisible(visible);
+
+		if (visible) {
+			addButton.classList.remove('hide');
+
+			this._eventHandler.add(
+				dom.on('#addFieldButton', 'click', this._handleAddFieldButtonClicked.bind(this))
+			);
+		}
+		else {
+			this._eventHandler.removeAllListeners();
+		}
+	}
+
+	/**
+	 * Handles click on plus button. Button shows Sidebar when clicked.
+	 * @private
+	 */
+
+	_handleAddFieldButtonClicked() {
+		this.openSidebar();
+	}
+
 	_handlePageDeleted(pageIndex) {
 		this.emit('pageDeleted', pageIndex);
 	}
@@ -252,6 +331,32 @@ class Builder extends Component {
 		this.openSidebar();
 
 		this.emit('pageReset');
+	}
+
+	@autobind
+	_handleModalButtonClicked(event) {
+		event.stopPropagation();
+
+		const {modal} = this.refs;
+		const {indexes} = this.state;
+
+		modal.emit('hide');
+
+		if (!event.target.classList.contains('close-modal')) {
+			this.emit(
+				'fieldDeleted',
+				{...indexes}
+			);
+		}
+	}
+
+	/**
+	 * Continues the propagation of event.
+	 * @private
+	 */
+
+	_handlePaginationModeUpdated() {
+		this.emit('paginationModeUpdated');
 	}
 
 	/**
@@ -264,6 +369,12 @@ class Builder extends Component {
 		this.emit('pagesUpdated', pages);
 	}
 
+	/**
+	 * Continues the propagation of event.
+	 * @param {Array} pages
+	 * @param {Number} pageIndex
+	 * @private
+	 */
 	_pageHasFields(pages, pageIndex) {
 		const visitor = new PagesVisitor([pages[pageIndex]]);
 
@@ -276,6 +387,19 @@ class Builder extends Component {
 		);
 
 		return hasFields;
+	}
+
+	created() {
+		this._eventHandler = new EventHandler();
+	}
+
+	/**
+	 * Continues the propagation of event.
+	 * @param {Object} successPageSettings
+	 * @private
+	 */
+	_handleSuccessPageChanged(successPageSettings) {
+		this.emit('successPageChanged', successPageSettings);
 	}
 
 	attached() {
@@ -294,24 +418,30 @@ class Builder extends Component {
 	 */
 
 	render() {
+		const {_handleModalButtonClicked, props} = this;
 		const {
 			activePage,
 			fieldTypes,
 			focusedField,
 			pages,
-			spritemap
-		} = this.props;
+			paginationMode,
+			spritemap,
+			successPageSettings,
+			visible
+		} = props;
 
 		const FormRendererEvents = {
 			activePageUpdated: this._handleActivePageUpdated.bind(this),
 			fieldClicked: this._handleFieldClicked.bind(this),
-			fieldDeleted: this._handleFieldDeleted.bind(this),
+			fieldDeleted: this._handleDeleteFieldClicked.bind(this),
 			fieldDuplicated: this._handleFieldDuplicated.bind(this),
 			fieldMoved: this._handleFieldMoved.bind(this),
 			pageAdded: this._handlePageAdded.bind(this),
 			pageDeleted: this._handlePageDeleted.bind(this),
 			pageReset: this._handlePageReset.bind(this),
-			pagesUpdated: this._handlePagesUpdated.bind(this)
+			pagesUpdated: this._handlePagesUpdated.bind(this),
+			paginationModeUpdated: this._handlePaginationModeUpdated.bind(this),
+			successPageChanged: this._handleSuccessPageChanged.bind(this)
 		};
 
 		const sidebarEvents = {
@@ -329,8 +459,34 @@ class Builder extends Component {
 							editable={true}
 							events={FormRendererEvents}
 							pages={pages}
+							paginationMode={paginationMode}
 							ref="FormRenderer"
 							spritemap={spritemap}
+							successPageSettings={successPageSettings}
+						/>
+						<ClayModal
+							body={Liferay.Language.get('are-you-sure-you-want-to-delete-this-field')}
+							events={{
+								clickButton: _handleModalButtonClicked
+							}}
+							footerButtons={[
+								{
+									alignment: 'right',
+									label: Liferay.Language.get('dismiss'),
+									style: 'primary',
+									type: 'close'
+								},
+								{
+									alignment: 'right',
+									label: Liferay.Language.get('delete'),
+									style: 'primary',
+									type: 'button'
+								}
+							]}
+							ref="modal"
+							size="sm"
+							spritemap={spritemap}
+							title={Liferay.Language.get('delete-field-dialog-title')}
 						/>
 					</div>
 				</div>
@@ -340,6 +496,7 @@ class Builder extends Component {
 					focusedField={focusedField}
 					ref="sidebar"
 					spritemap={spritemap}
+					visible={visible}
 				/>
 			</div>
 		);

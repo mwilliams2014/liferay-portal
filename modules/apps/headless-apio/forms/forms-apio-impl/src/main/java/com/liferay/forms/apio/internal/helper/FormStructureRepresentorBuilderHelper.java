@@ -33,6 +33,7 @@ import com.liferay.structure.apio.architect.util.StructureRepresentorBuilderHelp
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -40,12 +41,11 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Provides the information necessary to expose DDMFormStructure resources
- * through a web API. The resources are mapped from the internal model {@code
- * DDMStructure}.
+ * Provides the information necessary to expose {@code DDMFormStructure}
+ * resources through a web API. The resources are mapped from the internal model
+ * {@code DDMStructure}.
  *
  * @author Javier Gamarra
- * @review
  */
 @Component(
 	immediate = true, service = FormStructureRepresentorBuilderHelper.class
@@ -125,8 +125,6 @@ public class FormStructureRepresentorBuilderHelper {
 			"transient", DDMFormField::isTransient
 		).addNested(
 			"grid", ddmFormField -> ddmFormField, this::_buildDDMFormField
-		).addString(
-			"indexType", DDMFormField::getIndexType
 		);
 
 		return ddmFormFieldFirstStepBuilder;
@@ -138,8 +136,6 @@ public class FormStructureRepresentorBuilderHelper {
 
 		return builder.types(
 			"FormSuccessPageSettings"
-		).addBoolean(
-			"enabled", DDMFormSuccessPageSettings::isEnabled
 		).addLocalizedStringByLocale(
 			"headline", getLocalizedString(DDMFormSuccessPageSettings::getTitle)
 		).addLocalizedStringByLocale(
@@ -191,9 +187,15 @@ public class FormStructureRepresentorBuilderHelper {
 	private DDMFormSuccessPageSettings _getDDMFormSuccessPageSettings(
 		DDMStructure ddmStructure) {
 
-		DDMForm ddmForm = ddmStructure.getDDMForm();
-
-		return ddmForm.getDDMFormSuccessPageSettings();
+		return Optional.of(
+			ddmStructure.getDDMForm()
+		).map(
+			DDMForm::getDDMFormSuccessPageSettings
+		).filter(
+			DDMFormSuccessPageSettings::isEnabled
+		).orElse(
+			null
+		);
 	}
 
 	private DDMStructureVersion _getDDMStructureVersion(

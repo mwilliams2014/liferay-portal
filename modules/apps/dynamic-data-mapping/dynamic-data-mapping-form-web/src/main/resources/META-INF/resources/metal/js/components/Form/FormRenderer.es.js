@@ -1,6 +1,6 @@
 import '../Page/PageRenderer.es';
+import '../SuccessPage/SuccessPage.es';
 import 'clay-button';
-import 'clay-dropdown';
 import {Config} from 'metal-state';
 import {DragDrop} from 'metal-drag-drop';
 import {pageStructure} from '../../util/config.es';
@@ -8,6 +8,7 @@ import Component from 'metal-component';
 import FormSupport from './FormSupport.es';
 import Soy from 'metal-soy';
 import templates from './FormRenderer.soy.js';
+import {setValue} from '../../util/i18n.es';
 
 /**
  * FormRenderer.
@@ -54,6 +55,15 @@ class FormRenderer extends Component {
 		defaultPageTitle: Config.string().value(Liferay.Language.get('untitled-page')),
 
 		/**
+		 * @default false
+		 * @instance
+		 * @memberof FormRenderer
+		 * @type {boolean}
+		 */
+
+		dropdownExpanded: Config.bool().value(false).internal(),
+
+		/**
 		 * @default grid
 		 * @instance
 		 * @memberof FormRenderer
@@ -78,7 +88,27 @@ class FormRenderer extends Component {
 		 * @type {!string}
 		 */
 
-		spritemap: Config.string().required()
+		spritemap: Config.string().required(),
+
+		/**
+		 * @instance
+		 * @memberof FormRenderer
+		 * @type {string}
+		 */
+		successPageLabel: Config.string().value(Liferay.Language.get('success-page')),
+
+		/**
+		 * @instance
+		 * @memberof FormRenderer
+		 * @type {object}
+		 */
+		successPageSettings: Config.shapeOf(
+			{
+				body: Config.object(),
+				enabled: Config.bool(),
+				title: Config.object()
+			}
+		).value({})
 	};
 
 	/**
@@ -89,6 +119,21 @@ class FormRenderer extends Component {
 		if (this.editable && !this.dragAndDropDisabled) {
 			this._startDrag();
 		}
+
+		if (this.refs.dropdown) {
+			this.refs.dropdown.refs.dropdown.on('expandedChanged', this._handleExpandedChanged.bind(this));
+		}
+	}
+
+	disposeInternal() {
+		super.disposeInternal();
+		this.disposeDragAndDrop();
+	}
+
+	disposeDragAndDrop() {
+		if (this._dragAndDrop) {
+			this._dragAndDrop.dispose();
+		}
 	}
 
 	/**
@@ -98,14 +143,17 @@ class FormRenderer extends Component {
 	willReceiveState(nextState) {
 		if (nextState.pages) {
 			if (this.editable && !this.dragAndDropDisabled) {
-				if (this._dragAndDrop) {
-					this._dragAndDrop.disposeInternal();
-				}
+				this.disposeDragAndDrop();
 				this._startDrag();
 			}
 		}
 		return nextState;
 	}
+
+	/**
+	 * Render page options acordding the older form's options order
+	 * @private
+	 */
 
 	_getPageSettingsItems() {
 		const pageSettingsItems = [
@@ -115,19 +163,54 @@ class FormRenderer extends Component {
 			}
 		];
 
-		if (this.pages.length === 1) {
+		const successPageEnabled = this.successPageSettings.enabled;
+
+		if ((this.pages.length === 1) && (this.activePage != -1)) {
 			pageSettingsItems.push(
 				{
 					'label': Liferay.Language.get('reset-page'),
 					'settingsItem': 'reset-page'
 				}
 			);
+
+			if (!successPageEnabled) {
+				pageSettingsItems.push(
+					{
+						'label': Liferay.Language.get('add-success-page'),
+						'settingsItem': 'add-success-page'
+					}
+				);
+			}
 		}
 		else {
 			pageSettingsItems.push(
 				{
 					'label': Liferay.Language.get('delete-current-page'),
 					'settingsItem': 'delete-page'
+				}
+			);
+
+			if (!successPageEnabled) {
+				pageSettingsItems.push(
+					{
+						'label': Liferay.Language.get('add-success-page'),
+						'settingsItem': 'add-success-page'
+					}
+				);
+			}
+		}
+
+		if (this.pages.length > 1) {
+			let label = Liferay.Language.get('switch-pagination-to-top');
+
+			if (this.paginationMode == 'wizard') {
+				label = Liferay.Language.get('switch-pagination-to-bottom');
+			}
+
+			pageSettingsItems.push(
+				{
+					label,
+					settingsItem: 'switch-pagination-mode'
 				}
 			);
 		}
@@ -142,6 +225,10 @@ class FormRenderer extends Component {
 		};
 	}
 
+	_handleExpandedChanged({newVal}) {
+		this.dropdownExpanded = newVal;
+	}
+
 	/**
 	 * Add a page to the context
 	 * @private
@@ -149,6 +236,52 @@ class FormRenderer extends Component {
 
 	_addPage() {
 		this.emit('pageAdded');
+	}
+
+	/**
+	 * Add a success page to the context
+	 * @private
+	 */
+
+	_addSuccessPage() {
+		return this._updateSuccessPage(
+			{
+				body: 'Your information was successfully received. Thank you for filling out the form.',
+				enabled: true,
+				title: 'Done'
+			},
+			-1
+		);
+	}
+
+	_updateSuccessPage({body = '', title = '', enabled}, activePageValue) {
+		const language = themeDisplay.getLanguageId();
+		const successPageSettings = {
+			body: {},
+			enabled,
+			title: {}
+		};
+
+		this.activePage = activePageValue;
+
+		setValue(successPageSettings, language, 'body', body);
+		setValue(successPageSettings, language, 'title', title);
+
+		this.emit('activePageUpdated', this.activePage);
+		this.emit('successPageChanged', successPageSettings);
+	}
+
+	_deletePage() {
+		this.emit('pageDeleted', this.activePage);
+	}
+
+	_deleteSuccessPage() {
+		return this._updateSuccessPage(
+			{
+				enabled: false
+			},
+			this.pages.length - 1
+		);
 	}
 
 	/*
@@ -159,19 +292,39 @@ class FormRenderer extends Component {
 	_handlePageSettingsClicked({data}) {
 		const {settingsItem} = data.item;
 
-		if (settingsItem === 'add-page') {
+		this.dropdownExpanded = false;
+
+		if (settingsItem == 'add-page') {
 			this._addPage();
 		}
 		else if (settingsItem === 'reset-page') {
 			this._resetPage();
 		}
+		else if (settingsItem === 'delete-page' && this.activePage === -1) {
+			this._deleteSuccessPage();
+		}
 		else if (settingsItem === 'delete-page') {
 			this._deletePage();
 		}
+		else if (settingsItem == 'switch-pagination-mode') {
+			this._switchPaginationMode();
+		}
+		else if (settingsItem == 'add-success-page') {
+			this._addSuccessPage();
+		}
 	}
 
-	_deletePage() {
-		this.emit('pageDeleted', this.activePage);
+	/*
+	 * @param {Object} data
+	 * @private
+	 */
+
+	_handleSuccesPageChanged(successPageSettings) {
+		this.emit('successPageChanged', successPageSettings);
+	}
+
+	_switchPaginationMode() {
+		this.emit('paginationModeUpdated');
 	}
 
 	_resetPage() {
@@ -182,7 +335,6 @@ class FormRenderer extends Component {
 		const {pageId} = dataset;
 
 		this.activePage = parseInt(pageId, 10);
-
 		this.emit('activePageUpdated', this.activePage);
 	}
 
@@ -208,6 +360,42 @@ class FormRenderer extends Component {
 				}
 			);
 		}
+	}
+
+	/**
+	 * @private
+	 */
+
+	_handlePaginationLeftClicked() {
+		const {activePage} = this;
+		let index = activePage - 1;
+
+		if (activePage == -1) {
+			index = this.pages.length - 1;
+		}
+
+		this.emit(
+			'activePageUpdated',
+			index
+		);
+	}
+
+	/**
+	 * @private
+	 */
+
+	_handlePaginationRightClicked() {
+		const {activePage} = this;
+		let index = activePage + 1;
+
+		if (index == this.pages.length) {
+			index = -1;
+		}
+
+		this.emit(
+			'activePageUpdated',
+			index
+		);
 	}
 
 	/**

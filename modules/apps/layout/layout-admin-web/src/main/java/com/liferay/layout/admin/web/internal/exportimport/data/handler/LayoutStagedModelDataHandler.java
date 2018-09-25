@@ -318,7 +318,7 @@ public class LayoutStagedModelDataHandler
 			exportLinkedLayout(portletDataContext, layout, layoutElement);
 		}
 		else if (Objects.equals(
-					 layout.getType(), LayoutConstants.TYPE_PORTLET) ||
+					layout.getType(), LayoutConstants.TYPE_PORTLET) ||
 				 Objects.equals(
 					 layout.getType(),
 					 LayoutAdminConstants.LAYOUT_TYPE_CONTENT)) {
@@ -427,8 +427,8 @@ public class LayoutStagedModelDataHandler
 			friendlyURL = StringPool.SLASH + layoutId;
 		}
 		else if (layoutsImportMode.equals(
-					 PortletDataHandlerKeys.
-						 LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_NAME)) {
+					PortletDataHandlerKeys.
+						LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_NAME)) {
 
 			Locale locale = LocaleUtil.getSiteDefault();
 
@@ -453,8 +453,8 @@ public class LayoutStagedModelDataHandler
 			}
 		}
 		else if (layoutsImportMode.equals(
-					 PortletDataHandlerKeys.
-						 LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE)) {
+					PortletDataHandlerKeys.
+						LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE)) {
 
 			existingLayout = _layoutLocalService.fetchLayoutByUuidAndGroupId(
 				layout.getUuid(), groupId, privateLayout);
@@ -641,7 +641,7 @@ public class LayoutStagedModelDataHandler
 				importedLayout, layout.getTypeSettings(), portletsMergeMode);
 		}
 		else if (Objects.equals(
-					 layout.getType(), LayoutConstants.TYPE_LINK_TO_LAYOUT)) {
+					layout.getType(), LayoutConstants.TYPE_LINK_TO_LAYOUT)) {
 
 			importLinkedLayout(
 				portletDataContext, layout, importedLayout, layoutElement);
@@ -691,7 +691,11 @@ public class LayoutStagedModelDataHandler
 			}
 		}
 
-		importedLayout.setLayoutPrototypeUuid(layout.getLayoutPrototypeUuid());
+		String layoutPrototypeUuid = _getLayoutPrototypeUuid(
+			portletDataContext.getCompanyId(), layout, layoutElement);
+
+		importedLayout.setLayoutPrototypeUuid(layoutPrototypeUuid);
+
 		importedLayout.setLayoutPrototypeLinkEnabled(
 			layout.isLayoutPrototypeLinkEnabled());
 
@@ -1891,6 +1895,28 @@ public class LayoutStagedModelDataHandler
 		finally {
 			layout.setGroupId(groupId);
 		}
+	}
+
+	private String _getLayoutPrototypeUuid(
+		long companyId, Layout layout, Element layoutElement) {
+
+		boolean preloaded = GetterUtil.getBoolean(
+			layoutElement.attributeValue("preloaded"));
+
+		if (preloaded) {
+			String layoutPrototypeName = GetterUtil.getString(
+				layoutElement.attributeValue("layout-prototype-name"));
+
+			LayoutPrototype layoutPrototype =
+				_layoutPrototypeLocalService.fetchLayoutProtoype(
+					companyId, layoutPrototypeName);
+
+			if (layoutPrototype != null) {
+				return layoutPrototype.getUuid();
+			}
+		}
+
+		return layout.getLayoutPrototypeUuid();
 	}
 
 	private FragmentEntryLink _getOldFragmentEntryLink(

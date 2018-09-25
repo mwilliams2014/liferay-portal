@@ -149,6 +149,7 @@ class MBPortlet extends PortletBase {
 	 * @protected
 	 * @param {Event} event The click event that triggered the remove action
 	 */
+
 	removeAttachment_(event) {
 		let link = event.currentTarget;
 

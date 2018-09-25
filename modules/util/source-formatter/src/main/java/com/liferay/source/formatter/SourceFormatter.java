@@ -71,6 +71,9 @@ public class SourceFormatter {
 		DEFAULT_EXCLUDE_SYNTAX_PATTERNS = {
 			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/.git/**"),
 			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/.gradle/**"),
+			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/.idea/**"),
+			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/.m2/**"),
+			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/.settings/**"),
 			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/bin/**"),
 			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/build/**"),
 			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/classes/**"),
@@ -849,7 +852,7 @@ public class SourceFormatter {
 						}
 					}
 					else if (progressStatus.equals(
-								 ProgressStatus.CHECK_FILE_COMPLETED)) {
+								ProgressStatus.CHECK_FILE_COMPLETED)) {
 
 						processedChecksFileCount++;
 
@@ -866,7 +869,7 @@ public class SourceFormatter {
 							totalChecksFileCount);
 					}
 					else if (progressStatus.equals(
-								 ProgressStatus.SOURCE_FORMAT_COMPLETED)) {
+								ProgressStatus.SOURCE_FORMAT_COMPLETED)) {
 
 						if (_maxStatusMessageLength == -1) {
 							break;

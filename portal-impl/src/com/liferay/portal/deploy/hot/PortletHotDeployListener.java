@@ -208,8 +208,8 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 			return;
 		}
 
-		if (_log.isInfoEnabled()) {
-			_log.info("Registering portlets for " + servletContextName);
+		if (_log.isDebugEnabled()) {
+			_log.debug("Registering portlets for " + servletContextName);
 		}
 
 		PortletContextBag portletContextBag = new PortletContextBag(
@@ -391,8 +391,8 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 
 		Set<String> portletIds = new HashSet<>();
 
-		if (_log.isInfoEnabled()) {
-			_log.info("Unregistering portlets for " + servletContextName);
+		if (_log.isDebugEnabled()) {
+			_log.debug("Unregistering portlets for " + servletContextName);
 		}
 
 		for (Portlet portlet : portlets) {

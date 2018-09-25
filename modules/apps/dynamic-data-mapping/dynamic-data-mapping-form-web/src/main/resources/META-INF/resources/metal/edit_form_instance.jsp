@@ -39,6 +39,10 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 	<portlet:param name="mvcRenderCommandName" value="/admin/edit_form_instance" />
 </portlet:actionURL>
 
+<div class="lfr-alert-container">
+	<div class="container-fluid-1280 lfr-alert-wrapper"></div>
+</div>
+
 <div class="portlet-forms" id="<portlet:namespace />formContainer">
 	<clay:navigation-bar
 		componentId="formsNavigationBar"
@@ -77,10 +81,14 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 	</div>
 
 	<aui:form action="<%= saveFormInstanceURL %>" cssClass="ddm-form-builder-form" enctype="multipart/form-data" method="post" name="editForm">
-		<aui:input name="ddmStructureId" type="hidden" value="<%= ddmStructureId %>" />
+		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="formInstanceId" type="hidden" value="<%= formInstanceId %>" />
 		<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
-		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+		<aui:input name="ddmStructureId" type="hidden" value="<%= ddmStructureId %>" />
+		<aui:input name="name" type="hidden" value="<%= ddmFormAdminDisplayContext.getFormLocalizedName() %>" />
+		<aui:input name="description" type="hidden" value="<%= ddmFormAdminDisplayContext.getFormLocalizedDescription() %>" />
+		<aui:input name="serializedFormBuilderContext" type="hidden" value="<%= serializedFormBuilderContext %>" />
+		<aui:input name="serializedSettingsContext" type="hidden" value="" />
 
 		<%@ include file="/admin/exceptions.jspf" %>
 
@@ -112,11 +120,6 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 			</div>
 		</div>
 
-		<div class="container-fluid-1280">
-			<div id="<portlet:namespace />formBuilder"></div>
-			<div id="<portlet:namespace />ruleBuilder"></div>
-		</div>
-
 		<div id="<portlet:namespace />-container"></div>
 	</aui:form>
 
@@ -125,8 +128,41 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 	</div>
 </div>
 
+<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="publishFormInstance" var="publishFormInstanceURL" />
+
+<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="saveFormInstance" var="autoSaveFormInstanceURL" />
+
 <aui:script>
 	var rawModuleName = '<%= mainRequire %>'.split(' ')[0];
+
+	Liferay.namespace('DDM').FormSettings = {
+		autosaveInterval: <%= ddmFormAdminDisplayContext.getAutosaveInterval() %>,
+		autosaveURL: '<%= autoSaveFormInstanceURL.toString() %>',
+		portletNamespace: '<portlet:namespace />',
+		publishFormInstanceURL: '<%= publishFormInstanceURL.toString() %>',
+		restrictedFormURL: '<%= ddmFormAdminDisplayContext.getRestrictedFormURL() %>',
+		sharedFormURL: '<%= ddmFormAdminDisplayContext.getSharedFormURL() %>',
+		showPagination: true,
+		spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg',
+		strings: {
+			'any-unsaved-changes-will-be-lost-are-you-sure-you-want-to-leave': '<liferay-ui:message key="any-unsaved-changes-will-be-lost-are-you-sure-you-want-to-leave" />',
+			'draft-x': '<liferay-ui:message key="draft-x" />',
+			'error': '<liferay-ui:message key="error" />',
+			'leave': '<liferay-ui:message key="leave" />',
+			'leave-form': '<liferay-ui:message key="leave-form" />',
+			'please-add-at-least-one-field': '<liferay-ui:message key="please-add-at-least-one-field" />',
+			'preview-form': '<liferay-ui:message key="preview-form" />',
+			'publish-form': '<liferay-ui:message key="publish-form" />',
+			'save-form': '<liferay-ui:message key="save-form" />',
+			'saved-x': '<liferay-ui:message key="saved-x" />',
+			'saving': '<liferay-ui:message key="saving" />',
+			'stay': '<liferay-ui:message key="stay" />',
+			'the-form-was-published-successfully-access-it-with-this-url-x': '<liferay-ui:message key="the-form-was-published-successfully-access-it-with-this-url-x" />',
+			'the-form-was-unpublished-successfully': '<liferay-ui:message key="the-form-was-unpublished-successfully" />',
+			'unpublish-form': '<liferay-ui:message key="unpublish-form" />',
+			'your-request-failed-to-complete': '<liferay-ui:message key="your-request-failed-to-complete" />'
+		}
+	};
 
 	Liferay.Forms.App = {
 		dispose: function() {
@@ -153,19 +189,23 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 					if (context.pages.length === 0 && sessionPages) {
 						context.pages = sessionPages;
 					}
+
 					packageName.DDMForm(
 						{
 							context: context,
 							defaultLanguageId: '<%= ddmFormAdminDisplayContext.getDefaultLanguageId() %>',
 							dependencies: ['dynamic-data-mapping-form-field-type/metal'],
 							fieldTypes: <%= ddmFormAdminDisplayContext.getDDMFormFieldTypesJSONArray() %>,
-							formInstanceId: <%= formInstanceId %>,
+							formInstanceId: '<%= formInstanceId %>',
+							functionsMetadata: <%= functionsMetadata %>,
 							localizedDescription: <%= ddmFormAdminDisplayContext.getFormLocalizedDescription() %>,
 							localizedName: <%= ddmFormAdminDisplayContext.getFormLocalizedName() %>,
 							modules: Liferay.MODULES,
 							namespace: '<portlet:namespace />',
+							published: !!<%= ddmFormAdminDisplayContext.isFormPublished() %>,
 							rules: <%= serializedDDMFormRules %>,
-							spritemap: '<%= themeDisplay.getPathThemeImages() %>/clay/icons.svg'
+							spritemap: Liferay.DDM.FormSettings.spritemap,
+							strings: Liferay.DDM.FormSettings.strings
 						},
 						'#<portlet:namespace />-container',
 						function(ddmForm) {
@@ -178,6 +218,30 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 			);
 		}
 	};
+
+	var clearPortletHandlers = function(event) {
+			if (event.portletId === '<%= portletDisplay.getRootPortletId() %>') {
+				Liferay.Forms.App.dispose();
+
+				var translationManager = Liferay.component('<portlet:namespace />translationManager');
+
+				Liferay.destroyComponents(
+					function(component) {
+						var destroy = false;
+
+						if (component === translationManager) {
+							destroy = true;
+						}
+
+						return destroy;
+					}
+				);
+
+				Liferay.detach('destroyPortlet', clearPortletHandlers);
+			}
+		};
+
+		Liferay.on('destroyPortlet', clearPortletHandlers);
 
 	Liferay.Forms.App.start();
 </aui:script>

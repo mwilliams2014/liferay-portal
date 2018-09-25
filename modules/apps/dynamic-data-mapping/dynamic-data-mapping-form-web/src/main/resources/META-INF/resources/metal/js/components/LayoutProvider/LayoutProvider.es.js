@@ -25,6 +25,28 @@ class LayoutProvider extends Component {
 		initialPages: Config.arrayOf(pageStructure).value([]),
 
 		/**
+		 * @default 'wizard'
+		 * @instance
+		 * @memberof LayoutProvider
+		 * @type {?string}
+		 */
+
+		initialPaginationMode: Config.string().value('wizard'),
+
+		/**
+		 * @instance
+		 * @memberof LayoutProvider
+		 * @type {object}
+		 */
+		initialSuccessPageSettings: Config.shapeOf(
+			{
+				body: Config.object(),
+				enabled: Config.bool(),
+				title: Config.object()
+			}
+		),
+
+		/**
 		 * @default undefined
 		 * @instance
 		 * @memberof LayoutProvider
@@ -54,6 +76,14 @@ class LayoutProvider extends Component {
 		pages: Config.arrayOf(pageStructure).valueFn('_pagesValueFn'),
 
 		/**
+		 * @instance
+		 * @memberof LayoutProvider
+		 * @type {string}
+		 */
+
+		paginationMode: Config.string().valueFn('_paginationModeValueFn'),
+
+		/**
 		 * @default undefined
 		 * @instance
 		 * @memberof LayoutProvider
@@ -72,11 +102,21 @@ class LayoutProvider extends Component {
 				rowIndex: Config.number().required(),
 				type: Config.string().required()
 			}
-		).value({})
+		).value({}),
+
+		successPageSettings: Config.object().valueFn('_successPageSettingsValueFn')
 	};
 
 	_pagesValueFn() {
 		return this.props.initialPages;
+	}
+
+	_paginationModeValueFn() {
+		return this.props.initialPaginationMode;
+	}
+
+	_successPageSettingsValueFn() {
+		return this.props.initialSuccessPageSettings;
 	}
 
 	_handleActivePageUpdated(activePage) {
@@ -269,6 +309,7 @@ class LayoutProvider extends Component {
 			columnIndex
 		);
 		const {fields} = column;
+
 		pages = FormSupport.removeFields(
 			pages,
 			pageIndex,
@@ -301,8 +342,6 @@ class LayoutProvider extends Component {
 
 	_handlePageDeleted(pageIndex) {
 		const {pages} = this.state;
-
-		console.log(pageIndex, pages);
 
 		this.setState(
 			{
@@ -346,28 +385,6 @@ class LayoutProvider extends Component {
 	}
 
 	/**
-	 * Return a new page object
-	 * @private
-	 * @returns {object}
-	 */
-
-	createNewPage() {
-		const languageId = themeDisplay.getLanguageId();
-		const page = {
-			description: '',
-			enabled: true,
-			rows: [FormSupport.implAddRow(12, [])],
-			showRequiredFieldsWarning: true,
-			title: ''
-		};
-
-		setLocalizedValue(page, languageId, 'title', '');
-		setLocalizedValue(page, languageId, 'description', '');
-
-		return page;
-	}
-
-	/**
 	 * @param {!Array} pages
 	 * @private
 	 */
@@ -376,6 +393,34 @@ class LayoutProvider extends Component {
 		this.setState(
 			{
 				pages
+			}
+		);
+	}
+
+	_handlePaginationModeUpdated() {
+		const {paginationMode} = this.state;
+		let newMode = 'pagination';
+
+		if (paginationMode === newMode) {
+			newMode = 'wizard';
+		}
+
+		this.setState(
+			{
+				paginationMode: newMode
+			}
+		);
+	}
+
+	/**
+	 * Update the success page settings
+	 * @param {!Object} successPageSettings
+	 * @private
+	 */
+	_handleSuccessPageChanged(successPageSettings) {
+		this.setState(
+			{
+				successPageSettings
 			}
 		);
 	}
@@ -405,21 +450,6 @@ class LayoutProvider extends Component {
 	 * @return {Object}
 	 */
 
-	_addRow(pages, target, fields) {
-		const {pageIndex, rowIndex} = target;
-		const newRow = FormSupport.implAddRow(12, fields);
-
-		return FormSupport.addRow(pages, rowIndex, pageIndex, newRow);
-	}
-
-	/**
-	 * @param {!Array} pages
-	 * @param {!Object} target
-	 * @param {!Object} field
-	 * @private
-	 * @return {Object}
-	 */
-
 	_setColumnFields(pages, target, fields) {
 		const {columnIndex, pageIndex, rowIndex} = target;
 
@@ -432,9 +462,31 @@ class LayoutProvider extends Component {
 		);
 	}
 
+	/**
+	 * Return a new page object
+	 * @private
+	 * @returns {object}
+	 */
+
+	createNewPage() {
+		const languageId = themeDisplay.getLanguageId();
+		const page = {
+			description: '',
+			enabled: true,
+			rows: [FormSupport.implAddRow(12, [])],
+			showRequiredFieldsWarning: true,
+			title: ''
+		};
+
+		setLocalizedValue(page, languageId, 'title', '');
+		setLocalizedValue(page, languageId, 'description', '');
+
+		return page;
+	}
+
 	render() {
 		const {children, spritemap} = this.props;
-		const {activePage, focusedField, pages} = this.state;
+		const {activePage, focusedField, pages, paginationMode, successPageSettings} = this.state;
 
 		if (children.length) {
 			const events = {
@@ -449,7 +501,8 @@ class LayoutProvider extends Component {
 				pageAdded: this._handlePageAdded.bind(this),
 				pageDeleted: this._handlePageDeleted.bind(this),
 				pageReset: this._handlePageReset.bind(this),
-				pagesUpdated: this._handlePagesUpdated.bind(this)
+				paginationModeUpdated: this._handlePaginationModeUpdated.bind(this),
+				successPageChanged: this._handleSuccessPageChanged.bind(this)
 			};
 
 			for (let index = 0; index < children.length; index++) {
@@ -463,13 +516,17 @@ class LayoutProvider extends Component {
 						events,
 						focusedField,
 						pages,
-						spritemap
+						paginationMode,
+						spritemap,
+						successPageSettings
 					}
 				);
 			}
 		}
 
-		return children;
+		return (
+			<span>{children}</span>
+		);
 	}
 }
 

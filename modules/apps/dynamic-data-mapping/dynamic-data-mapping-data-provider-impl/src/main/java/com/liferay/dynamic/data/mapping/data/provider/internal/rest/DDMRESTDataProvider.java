@@ -70,7 +70,10 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Marcellus Tavares
  */
-@Component(immediate = true, property = "ddm.data.provider.type=rest")
+@Component(
+	immediate = true, property = "ddm.data.provider.type=rest",
+	service = DDMDataProvider.class
+)
 public class DDMRESTDataProvider implements DDMDataProvider {
 
 	@Override
@@ -465,7 +468,9 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 	@Reference
 	protected UserLocalService userLocalService;
 
-	private final Pattern _pathParameterPattern = Pattern.compile("\\{(.*)\\}");
+	private static final Pattern _pathParameterPattern = Pattern.compile(
+		"\\{(.*)\\}");
+
 	private PortalCache<String, DDMDataProviderResponse> _portalCache;
 
 }
