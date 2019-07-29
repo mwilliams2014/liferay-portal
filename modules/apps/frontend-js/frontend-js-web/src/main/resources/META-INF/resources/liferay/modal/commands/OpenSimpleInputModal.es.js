@@ -18,20 +18,20 @@ import SimpleInputModal from '../components/SimpleInputModal.es';
  * Function that implements the SimpleInputModal pattern, which allows
  * manipulating small amounts of data with a form shown inside a modal.
  *
- * @param {Object} options
- * @param {string} checkboxFieldLabel
- * @param {string} checkboxFieldName
- * @param {boolean} checkboxFieldValue
- * @param {!string} dialogTitle
- * @param {!string} formSubmitURL
- * @param {string} idFieldName
- * @param {string} idFieldValue
- * @param {!string} mainFieldLabel
- * @param {!string} mainFieldName
- * @param {string} mainFieldPlaceholder
- * @param {string} mainFieldValue
- * @param {!string} namespace
- * @param {!string} spritemap
+ * @param {object} options The list of options (see description).
+ * @param {string} options.dialogTitle The dialog title (see description).
+ * @param {string} options.formSubmitURL The form submit URL (see description).
+ * @param {string} options.mainFieldLabel The main field label (see description).
+ * @param {string} options.mainFieldName The main field name (see description).
+ * @param {string} options.namespace The namespace (see description).
+ * @param {string} options.spritemap The spritemap (see description).
+ * @param {string} [options.checkboxFieldName] The checkbox field name (see description).
+ * @param {string} [options.checkboxFieldLabel] The checkbox field label (see description).
+ * @param {boolean} [options.checkboxFieldValue] The checkbox field value (see description).
+ * @param {string} [options.idFieldName] The id field name (see description).
+ * @param {string} [options.idFieldValue] The id field value (see description).
+ * @param {string} [options.mainFieldPlaceholder] The main field placeholder (see description).
+ * @param {string} [options.mainFieldValue] The main field value (see description).
  *
  * @return {SimpleInputModal} SimpleInputModal component instance
  * @review
