@@ -642,7 +642,7 @@ configuration changes.
 
 ### Updated jQuery and Lodash Bundled Versions
 - **Date:** 2018-Feb-07
-- **JIRA Ticket:** LPS-66645, LPS-66646
+- **JIRA Ticket:** LPS-77764, LPS-77765
 
 #### What changed?
 
