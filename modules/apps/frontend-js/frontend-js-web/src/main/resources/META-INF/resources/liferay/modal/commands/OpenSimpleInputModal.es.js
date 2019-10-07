@@ -19,24 +19,23 @@ import SimpleInputModal from '../components/SimpleInputModal.es';
  * Function that implements the SimpleInputModal pattern, which allows
  * manipulating small amounts of data with a form shown inside a modal.
  *
- * @param {Object} alert
- * @param {Object} options
- * @param {string} checkboxFieldLabel
- * @param {string} checkboxFieldName
- * @param {boolean} checkboxFieldValue
- * @param {!string} dialogTitle
- * @param {!string} formSubmitURL
- * @param {string} idFieldName
- * @param {string} idFieldValue
- * @param {!string} mainFieldLabel
- * @param {!string} mainFieldName
- * @param {string} mainFieldPlaceholder
- * @param {string} mainFieldValue
- * @param {!string} namespace
- * @param {!string} spritemap
+ * @param {Object} alert An optional alert for the modal
+ * @param {Object} options The list of options for the modal (see description)
+ * @param {string} checkboxFieldLabel The label for the optional checkbox field, if it's included
+ * @param {string} checkboxFieldName The name for the optional checkbox field, if it's included
+ * @param {boolean} checkboxFieldValue The value for the optional checkbox field, if it's included
+ * @param {!string} dialogTitle The modal window's title
+ * @param {!string} formSubmitURL The URL where the form will be submitted
+ * @param {string} idFieldName The ID of the optional hidden field, if it's included
+ * @param {string} idFieldValue The value of the optional hidden field, if it's included
+ * @param {!string} mainFieldLabel The main input field's label
+ * @param {!string} mainFieldName The main input field's name
+ * @param {string} mainFieldPlaceholder A placeholder value for main input field
+ * @param {string} mainFieldValue The main input field's value
+ * @param {!string} namespace The namespace to prepend to field names
+ * @param {!string} spritemap The URL for the portal icons used in the modal
  *
  * @return {SimpleInputModal} SimpleInputModal component instance
- * @review
  *
  * @see SimpleInputModal
  *
@@ -52,23 +51,22 @@ import SimpleInputModal from '../components/SimpleInputModal.es';
  * 	   3.1. If the response is successful, a formSuccess
  * 	        event is dispatched. Then, if there is a
  * 	        redirectURL, it performs a redirection.
- * 	        Finally the SimpleInputModal is disposed and
- * 	        every event listeners are detached.
- * 	   3.2. If the response is an error, a formError event
- * 	   		is dispatched. Then the given errorMessage is shown inside
- * 	        the modal and nothing happens until the user
- * 	        fixes submits it again or the modal is closed.
+ * 	        Finally, the SimpleInputModal is disposed and
+ * 	        all event listeners are detached.
+ * 	   3.2. If the response is an error, a formError event is
+ * 	   		  dispatched. Then the given errorMessage is shown inside
+ * 	        the modal and nothing happens until the user fixes the
+ * 	        error and submits it again or the modal is closed.
  *
  * Optional fields
  * - Checkbox: SimpleInputModal supports an optional checkbox field that
  *   can be added to the form.
- * - Id field: in case of editing elements instead of creating new ones,
- *   and hidden id field can be used. There are also fieldValues that can
- *   be used for having an initial value instead of an empty field.
- * - Redirect url: the common behaviour is redirecting to an existing url
- *   when the form is submitted. This URL is obtained from the request response
- *   as "redirectURL" and, if no URL is obtained, the SimpleInputModal is simply
- *   disposed.
+ * - Id field: if you need to edit an element, instead of creating new ones,
+ *   a hidden ID field can be used. fieldValues can also be used to specify an 
+ *   initial value instead of an empty field.
+ * - Redirect URL: by default, the form redirects to an existing URL when it's 
+ *   submitted. This URL is obtained from the request response as "redirectURL."
+ *   If no URL is obtained, the SimpleInputModal is disposed.
  */
 
 function openSimpleInputModal({
@@ -94,7 +92,6 @@ function openSimpleInputModal({
 	/**
 	 * Callback executed when the SimpleInputModal component
 	 * is closed or the form cancel button is pressed.
-	 * @review
 	 */
 
 	function handleSimpleInputModalDisposal() {
@@ -109,9 +106,8 @@ function openSimpleInputModal({
 
 	/**
 	 * Callback executed when the SimpleInputModal form receives a successful
-	 * response from server.
+	 * response from the server.
 	 * @param {{redirectURL: string}} serverResponseContent
-	 * @review
 	 */
 
 	function handleSimpleInputModalSubmission(serverResponseContent) {
