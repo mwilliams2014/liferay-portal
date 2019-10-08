@@ -418,7 +418,12 @@ Closure Template library.
 
 ### Converted liferay-ui Tags to Module-Specific Tags
 - **Date:** 2017-Aug-28
+- **Date:** 2016-Oct-05
+- **Date:** 2019-April-16
+
 - **JIRA Ticket:** LPS-74331
+- **JIRA Ticket:** LPS-60269
+- **JIRA Ticket:** LPS-60365
 
 #### What changed?
 
@@ -426,6 +431,8 @@ Many `liferay-ui` taglibs have been moved out of Portal's kernel into OSGi
 modules. This change modified many of the taglib names. The list of converted
 names is below:
 
+- `liferay-ui:app-view-display-style` &rarr; `aui:nav-item`
+- `liferay-ui:app-view-toolbar` &rarr; Removed
 - `liferay-ui:asset-add-button` &rarr; `liferay-asset:asset-add-button`
 - `liferay-ui:asset-addon-entry-display` &rarr; `liferay-asset:asset-addon-entry-display`
 - `liferay-ui:asset-addon-entry-selector` &rarr; `liferay-asset:asset-addon-entry-selector`
@@ -437,11 +444,30 @@ names is below:
 - `liferay-ui:asset-tags-available` &rarr; `liferay-asset:asset-tags-available`
 - `liferay-ui:asset-tags-error` &rarr; `liferay-asset:asset-tags-error`
 - `liferay-ui:asset-tags-navigation` &rarr; `liferay-asset:asset-tags-navigation `
+- `liferay-ui:calendar` &rarr; Removed
+- `liferay-ui:categorization-filter` &rarr; `liferay-asset:categorization-filter`
+- `liferay-ui:discussion` &rarr; `liferay-comment:discussion`
+- `liferay-ui:group-search` &rarr; Removed
 - `liferay-ui:input-asset-links` &rarr; `liferay-asset:input-asset-links`
+- `liferay-ui:input-select` &rarr; Removed
+- `liferay-ui:input-textarea` &rarr; Removed
 - `liferay-ui:journal-content-search` &rarr; Removed (`journal-content-search-web` was deprecated)
+- `liferay-ui:my-sites` &rarr; Removed
+- `liferay-ui:navigation` &rarr; `liferay-site-navigation:navigation`
+- `liferay-ui:png-image` &rarr; Removed
+- `liferay-ui:ratings-score` &rarr; Removed
 - `liferay-ui:restore-entry` &rarr; Removed
 - `liferay-ui:rss` &rarr;` liferay-rss:rss`
 - `liferay-ui:rss-settings` &rarr; `liferay-rss:rss-settings`
+- `liferay-ui:search` &rarr; Removed
+- `liferay-ui:search-container-column-button` &rarr; Removed
+- `liferay-ui:social-activities` &rarr; `liferay-social-activities:social-activities`
+- `liferay-ui:social-bookmark` &rarr; `liferay-social-bookmarks:bookmark`
+- `liferay-ui:social-bookmarks` &rarr; `liferay-social-bookmarks:bookmarks`
+- `liferay-ui:social-bookmarks-settings` &rarr; `liferay-social-bookmarks:bookmarks-settings`
+- `liferay-ui:trash-empty` &rarr; `liferay-trash:empty`
+- `liferay-ui:trash-undo` &rarr; `liferay-trash:undo`
+- `liferay-ui:user-search` &rarr; Removed
 
 #### Who is affected?
 
