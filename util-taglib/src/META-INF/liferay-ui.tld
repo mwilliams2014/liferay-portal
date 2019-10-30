@@ -1958,6 +1958,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>The selected language ID for the input when <![CDATA[<code>localized</code>]]> is <![CDATA[<code>true</code>]]>.</description>
+			<name>selectedLanguageId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>toolbarSet</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
