@@ -879,7 +879,7 @@
 				<outputType>boolean</outputType>
 			</attribute>
 			<attribute>
-				<description>Selected language ID, for the case when input is localized.</description>
+				<description>The selected language ID for the input when <![CDATA[<code>localized</code>]]> is <![CDATA[<code>true</code>]]>.</description>
 				<name>selectedLanguageId</name>
 				<inputType>java.lang.String</inputType>
 				<outputType>java.lang.String</outputType>
