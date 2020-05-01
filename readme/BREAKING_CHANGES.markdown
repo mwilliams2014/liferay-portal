@@ -20,7 +20,7 @@ Here are some of the types of changes documented in this file:
   replaces an old API, in spite of the old API being kept in Liferay Portal for
   backwards compatibility.
 
-*This document has been reviewed through commit `5dda5217372e`.*
+*This document has been reviewed through commit `60e4673c7dfb`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -422,14 +422,14 @@ Closure Template library.
 
 #### What changed?
 
-Many `liferay-ui` taglibs have been moved out of Portal's kernel into OSGi
-modules. This change modified many of the taglib names. The list of converted
-names is below:
+Several `liferay-ui` taglibs have been moved from the Portal's kernel into OSGi
+modules, resulting in taglib names being changed. The updated names are listed
+below:
 
 - `liferay-ui:asset-add-button` &rarr; `liferay-asset:asset-add-button`
 - `liferay-ui:asset-addon-entry-display` &rarr; `liferay-asset:asset-addon-entry-display`
 - `liferay-ui:asset-addon-entry-selector` &rarr; `liferay-asset:asset-addon-entry-selector`
-- `liferay-ui:asset-categories-available`  &rarr; `liferay-asset:asset-categories-available`
+- `liferay-ui:asset-categories-available` &rarr; `liferay-asset:asset-categories-available`
 - `liferay-ui:asset-categories-error` &rarr; `liferay-asset:asset-categories-error`
 - `liferay-ui:asset-display` &rarr; `liferay-asset:asset-display`
 - `liferay-ui:asset-links` &rarr; `liferay-asset:asset-links`
@@ -449,12 +449,12 @@ This affects anyone who is using the taglibs listed above.
 
 #### How should I update my code?
 
-You must migrate your `liferay-ui` tags to the new tag names. If you prefer
+You must update your `liferay-ui` tags to use the new names. If you prefer
 keeping the old names temporarily, you can rely on the compatibility layer
 offered by Liferay. To set this, add the `com.liferay.portal.web.compat`
 dependency to your project's build file.
 
-Be sure to update to the new tag names soon, as this compatibility layer is
+Use the updated tag names as soon as you're able, as this compatibility layer is
 deprecated and will not be available for future releases.
 
 #### Why was this change made?
