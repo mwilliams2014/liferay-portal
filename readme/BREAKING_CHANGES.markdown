@@ -20,7 +20,7 @@ Here are some of the types of changes documented in this file:
   replaces an old API, in spite of the old API being kept in Liferay Portal for
   backwards compatibility.
 
-*This document has been reviewed through commit `b0f131f64818`.*
+*This document has been reviewed through commit `20bb08f47603`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -717,17 +717,18 @@ side, improving page loading times.
 
 ---------------------------------------
 
-### Remove support of blocking cache
+### Remove Support for Blocking Cache
 - **Date:** 2020-Jun-17
 - **JIRA Ticket:** [LPS-115687](https://issues.liferay.com/browse/LPS-115687)
 
 #### What changed?
-Blocking cache support is removed, these properties can no longer be used to
+
+Blocking cache support was removed. These properties can no longer be used to
 enable blocking cache:
 
-`ehcache.blocking.cache.allowed`,
-`permissions.object.blocking.cache`,
-`value.object.entity.blocking.cache`.
+- `ehcache.blocking.cache.allowed`
+- `permissions.object.blocking.cache`
+- `value.object.entity.blocking.cache`
 
 #### Who is affected?
 
@@ -740,42 +741,39 @@ depends on it, you must implement it yourself.
 
 #### Why was this change made?
 
-This change was made because blocking caches should never be enabled because of
-its bad performance.
+This change was made to improve performance because blocking caches should never be enabled.
 
 ---------------------------------------
 
-### Remove support of setting properties of cache for each entity model
+### Remove Support for Setting Cache Properties for Each Entity Model
 - **Date:** 2020-Jun-24
 - **JIRA Ticket:** [LPS-116049](https://issues.liferay.com/browse/LPS-116049)
 
 #### What changed?
-Remove support of setting the following properties of cache for a specific
-entity:
 
-`value.object.entity.cache.enabled`
-`value.object.finder.cache.enabled`
-`value.object.column.bitmask.enabled`
+Support was removed for setting these cache properties for an entity:
 
-For example the following properties are for entity
+- `value.object.entity.cache.enabled*`
+- `value.object.finder.cache.enabled*`
+- `value.object.column.bitmask.enabled*`
+
+For example, these properties are for entity
 `com.liferay.portal.kernel.model.User`:
 
-`value.object.entity.cache.enabled.com.liferay.portal.kernel.model.User`
-`value.object.finder.cache.enabled.com.liferay.portal.kernel.model.User`
-`value.object.column.bitmask.enabled.com.liferay.portal.kernel.model.User`
+- `value.object.entity.cache.enabled.com.liferay.portal.kernel.model.User`
+- `value.object.finder.cache.enabled.com.liferay.portal.kernel.model.User`
+- `value.object.column.bitmask.enabled.com.liferay.portal.kernel.model.User`
 
 #### Who is affected?
 
-This affects anyone using the properties listed above for a specific entity.
+This affects anyone using the properties listed above for an entity.
 
 #### How should I update my code?
 
-There's no direct replacement for the removed feature, please remove
-corresponding property settings directly.
+There's no direct replacement for the removed feature. You must remove
+these properties from your entities.
 
 #### Why was this change made?
 
-This change was made because there is no good reason to set those properties
-for a specific entity.
-
+This change was made because these properties are not useful for an entity.
 ---------------------------------------
